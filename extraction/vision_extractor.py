@@ -203,7 +203,7 @@ If a registration number is present, extract it separately.
 Do not confuse registration number with roll number.
 
 ==================================================
-7. DOCUMENT DATE
+7. DOCUMENT DATE & ACADEMIC YEARS
 ==================================================
 
 If the document contains a date that clearly refers to the document,
@@ -216,9 +216,25 @@ Examples:
 
 → document_date = "22-07-2022"
 
+If passing year is visible, extract as `passing_year`.
+If academic year is visible, extract as `academic_year`.
+If semester is visible, extract as `semester`.
+
 A document date MUST NOT be stored as `dob`.
 
 If the date has no clear semantic association, do not assign it to DOB.
+
+==================================================
+7.5 OTHER IDENTITY & INSTITUTION FIELDS
+==================================================
+
+Extract the following if explicitly visible:
+- `gender` (M/F/Male/Female/Other)
+- `category` (General/SC/ST/OBC)
+- `enrollment_no` (Usually on college degrees)
+- `address`, `city`, `district`, `state`, `pincode`
+- `school`, `college`, `university`, `board`
+- `course`, `branch`
 
 ==================================================
 8. PERCENTAGE
@@ -309,7 +325,6 @@ must become:
 }}
 
 Do NOT take numbers simply because they are visually close to a subject.
-
 Always determine their column position.
 
 ==================================================
@@ -401,12 +416,28 @@ Use exactly this structure:
   "document_type": "{document_type}",
   "name": null,
   "dob": null,
+  "gender": null,
+  "category": null,
   "father_name": null,
   "mother_name": null,
   "guardian_name": null,
   "roll_no": null,
   "registration_no": null,
+  "enrollment_no": null,
   "school": null,
+  "college": null,
+  "university": null,
+  "board": null,
+  "course": null,
+  "branch": null,
+  "academic_year": null,
+  "passing_year": null,
+  "semester": null,
+  "address": null,
+  "city": null,
+  "district": null,
+  "state": null,
+  "pincode": null,
   "document_date": null,
   "percentage": null,
   "cgpa": null,
@@ -538,7 +569,8 @@ def extract_from_image(image_path, document_type):
             }
         ],
         response_format={"type": "json_object"},
-        temperature=0
+        temperature=0,
+        max_tokens=800
     )
 
     content = response.choices[0].message.content

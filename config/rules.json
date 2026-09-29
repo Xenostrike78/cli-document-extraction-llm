@@ -1,12 +1,18 @@
 {
   "annual_income": {
-    "sources": ["annual_income", "monthly_income"],
+    "sources": [
+      "annual_income",
+      "monthly_income"
+    ],
     "rule": "prefer_first_present_else_multiply",
     "multiply_by": 12
   },
   "percentage": {
-    "sources": ["percentage", "cgpa"],
-    "rule": "prefer_first_present_else_multiply",
+    "sources": [
+      "percentage",
+      "cgpa"
+    ],
+    "rule": "calculate_percentage",
     "multiply_by": 9.5
   }
 }

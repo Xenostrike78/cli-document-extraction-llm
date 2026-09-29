@@ -770,6 +770,26 @@ def generate_candidate_report(
         )
 
     else:
+        
+        # --- OVERALL CONCLUSION ADDITION ---
+        all_match = all(r.final_decision in ["MATCH", "PROBABLE_MATCH"] for r in identity_results)
+        any_mismatch = any(r.final_decision in ["NON_MATCH", "PROBABLE_NON_MATCH"] for r in identity_results)
+        
+        if all_match:
+            overall = "<font color='green'><b>YES - All documents appear to belong to the SAME ENTITY.</b></font>"
+        elif any_mismatch:
+            overall = "<font color='red'><b>NO - Documents likely DO NOT belong to the same entity.</b></font>"
+        else:
+            overall = "<font color='orange'><b>NEEDS REVIEW - Identity could not be confidently established.</b></font>"
+            
+        story.append(
+            Paragraph(
+                f"<b>Overall Entity Conclusion:</b> {overall}",
+                body_style,
+            )
+        )
+        story.append(Spacer(1, 0.4 * cm))
+        # -----------------------------------
 
         identity_table_data = [
             [

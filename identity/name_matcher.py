@@ -1,10 +1,6 @@
-"""
-Name normalization and fuzzy matching.
-
-Adapted from the project's own name_convention.py. Kept as a standalone,
-importable module so identity/resolver.py can call compare_names() as
-one signal among several (DOB, roll no., father's name).
-"""
+# identity/name_matcher.py
+# Normalizes names and scores how similar two names are.
+# Used by resolver.py as one signal among several — it doesn't make the final call alone.
 
 import re
 import unicodedata
@@ -14,25 +10,16 @@ from typing import List
 from rapidfuzz.fuzz import ratio, WRatio
 from unidecode import unidecode
 
-# Controlled abbreviation / alias dictionary.
-# This is only one source of evidence -- never assume an alias
-# automatically means the same person; it feeds into a weighted score.
-ALIASES = {
-    "mohd": "mohammad",
-    "md": "mohammad",
-    "mohammed": "mohammad",
-    "muhammad": "mohammad",
-    "abd": "abdul",
-    # Add verified domain-specific variations here.
-}
+from identity.indian_names_kb import FLAT_ALIASES as ALIASES
+from identity.name_rag import get_name_rag
 
+# Common titles that shouldn't be treated as part of the name
 TITLES = {"mr", "mrs", "ms", "miss", "dr", "prof", "sir", "shri", "smt"}
-
 
 @dataclass
 class Token:
     value: str
-    token_type: str
+    token_type: str  # "initial" | "title" | "full"
 
 
 @dataclass
@@ -47,55 +34,61 @@ class NameMatchResult:
     name1: str
     name2: str
     overall_score: float
-    decision: str  # STRONG_MATCH | POSSIBLE_MATCH | LOW_SIMILARITY
+    decision: str   # STRONG_MATCH | POSSIBLE_MATCH | LOW_SIMILARITY
     reasons: List[str]
 
 
-def _unicode_normalize(text: str) -> str:
-    return unicodedata.normalize("NFKC", text)
+def _clean(text):
+    text = unicodedata.normalize("NFKC", text)
+    text = re.sub(r"[^\w\s]", " ", text, flags=re.UNICODE)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
 
 
-def _remove_punctuation(text: str) -> str:
-    return re.sub(r"[^\w\s]", " ", text, flags=re.UNICODE)
-
-
-def _normalize_spaces(text: str) -> str:
-    return re.sub(r"\s+", " ", text).strip()
-
-
-def _is_initial(token: str) -> bool:
+def _is_initial(token):
     return len(token) == 1 and token.isalpha()
 
 
-def _detect_token_type(token: str) -> str:
-    if _is_initial(token):
-        return "initial"
-    if token in TITLES:
-        return "title"
-    return "full"
-
-
 def normalize_name(name: str) -> NormalizedName:
+    """
+    Converts a raw name string into a canonical form that can be compared
+    across documents. Handles:
+      - Unicode/transliteration (unidecode)
+      - Titles (Mr, Dr, Shri...)
+      - Name abbreviations (Md -> Mohammad via ALIASES KB)
+      - Rare variants via TF-IDF RAG fallback
+    """
     if not name:
         return NormalizedName(original=name or "", canonical_tokens=[], canonical_name="")
 
-    text = _unicode_normalize(name).strip().lower()
-    text = _remove_punctuation(text)
-    text = _normalize_spaces(text)
-    text = unidecode(text)  # transliterate non-Latin scripts
-    text = _normalize_spaces(_remove_punctuation(text.lower()))
-
+    text = _clean(unidecode(name.strip().lower()))
     raw_tokens = text.split()
-    tokens = [Token(t, _detect_token_type(t)) for t in raw_tokens]
+    tokens = [Token(t, "initial" if _is_initial(t) else ("title" if t in TITLES else "full")) for t in raw_tokens]
     tokens = [t for t in tokens if t.token_type != "title"]
 
-    canonical_tokens = [
-        t.value if t.token_type == "initial" else ALIASES.get(t.value, t.value)
-        for t in tokens
-    ]
-    canonical_name = " ".join(canonical_tokens)
+    rag = get_name_rag()
+    canonical_tokens = []
 
-    return NormalizedName(original=name, canonical_tokens=canonical_tokens, canonical_name=canonical_name)
+    for t in tokens:
+        if t.token_type == "initial":
+            canonical_tokens.append(t.value)
+        else:
+            # Try flat dictionary first (fast, deterministic)
+            canon = ALIASES.get(t.value)
+
+            # Fall back to TF-IDF RAG for anything not in the dictionary
+            if not canon:
+                rag_canon, dist = rag.lookup_variant(t.value)
+                if rag_canon and dist < 1.0:
+                    canon = rag_canon
+
+            canonical_tokens.append(canon if canon else t.value)
+
+    return NormalizedName(
+        original=name,
+        canonical_tokens=canonical_tokens,
+        canonical_name=" ".join(canonical_tokens),
+    )
 
 
 def _token_similarity(n1: NormalizedName, n2: NormalizedName) -> float:
@@ -106,6 +99,7 @@ def _token_similarity(n1: NormalizedName, n2: NormalizedName) -> float:
 
 
 def _initial_compatibility(t1: List[str], t2: List[str]) -> float:
+    """Check if initials are compatible with full tokens (e.g. 'A' matches 'Ahmad')."""
     if not t1 or not t2:
         return 0.0
     matched = comparisons = 0
@@ -127,38 +121,35 @@ def _order_similarity(n1: NormalizedName, n2: NormalizedName) -> float:
     if t1 == t2:
         return 1.0
     if set(t1) == set(t2):
-        return 0.8
+        return 0.8   # same tokens, different order (common in Indian names)
     return ratio(" ".join(t1), " ".join(t2)) / 100.0
 
 
 def compare_names(raw_name1: str, raw_name2: str) -> NameMatchResult:
+    """Score the similarity between two raw name strings (0.0 to 1.0)."""
     if not raw_name1 or not raw_name2:
         return NameMatchResult(raw_name1, raw_name2, 0.0, "LOW_SIMILARITY", ["One or both names missing"])
 
-    n1, n2 = normalize_name(raw_name1), normalize_name(raw_name2)
+    n1 = normalize_name(raw_name1)
+    n2 = normalize_name(raw_name2)
 
     if n1.canonical_name == n2.canonical_name:
         return NameMatchResult(raw_name1, raw_name2, 1.0, "STRONG_MATCH", ["Exact canonical name match"])
 
-    token_score = _token_similarity(n1, n2)
+    token_score   = _token_similarity(n1, n2)
     initial_score = _initial_compatibility(n1.canonical_tokens, n2.canonical_tokens)
-    fuzzy_score = WRatio(n1.canonical_name, n2.canonical_name) / 100.0
-    order_score = _order_similarity(n1, n2)
+    fuzzy_score   = WRatio(n1.canonical_name, n2.canonical_name) / 100.0
+    order_score   = _order_similarity(n1, n2)
 
     overall = 0.30 * token_score + 0.25 * initial_score + 0.30 * fuzzy_score + 0.15 * order_score
 
     reasons = []
-    if token_score >= 0.8:
-        reasons.append("High token overlap")
-    if initial_score >= 0.8:
-        reasons.append("Initial/full-name compatibility")
-    if fuzzy_score >= 0.85:
-        reasons.append("High fuzzy similarity")
-    if order_score >= 0.8:
-        reasons.append("Compatible token order")
+    if token_score   >= 0.8: reasons.append("High token overlap")
+    if initial_score >= 0.8: reasons.append("Initial/full-name compatibility")
+    if fuzzy_score   >= 0.85: reasons.append("High fuzzy similarity")
+    if order_score   >= 0.8: reasons.append("Compatible token order")
     if any(alias in raw_name1.lower() or alias in raw_name2.lower() for alias in ALIASES):
         reasons.append("Possible abbreviation/alias variation")
 
     decision = "STRONG_MATCH" if overall >= 0.90 else "POSSIBLE_MATCH" if overall >= 0.75 else "LOW_SIMILARITY"
-
     return NameMatchResult(raw_name1, raw_name2, round(overall, 4), decision, reasons)
