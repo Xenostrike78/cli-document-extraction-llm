@@ -1,5 +1,5 @@
 import base64
-import json,os
+import json,os,re
 from pathlib import Path
 from openai import OpenAI
 from dotenv import load_dotenv
