@@ -2,22 +2,25 @@ import os
 import json
 import base64
 from pathlib import Path
-from .prompt import build_extraction_prompt
 
 from dotenv import load_dotenv
 from groq import Groq
 
-from config.schemas import DocumentExtraction
-from extraction.pdf_converter import convert_pdf_to_images
+from .prompt import build_extraction_prompt
+from config.schemas import (
+    Class10Schema,
+    Class12Schema,
+    CollegeSchema,
+)
 
 load_dotenv()
 
 api_key = os.getenv("GROQ_API_KEY")
+
 if not api_key:
     raise RuntimeError("GROQ_API_KEY is not set. Add it to your .env file.")
 
 client = Groq(api_key=api_key)
-# MODEL = "llama-3.1-8b-instant"
 MODEL = "qwen/qwen3.8-27b"
 
 def encode_image(image_path):
@@ -39,14 +42,18 @@ def get_image_mime_type(image_path):
 def extract_from_image(image_path, document_type):
     encoded_image = encode_image(image_path)
     mime_type = get_image_mime_type(image_path)
-    prompt = build_extraction_prompt(document_type)
 
+    prompt = build_extraction_prompt(document_type)
     response = client.chat.completions.create(
         model=MODEL,
         messages=[
             {
                 "role": "system",
-                "content": "You are a precise document extraction system."
+                "content": (
+                    "You are a precise document extraction system. "
+                    "Extract only information explicitly visible "
+                    "in the document. Never guess or infer."
+                )
             },
             {
                 "role": "user",
@@ -63,23 +70,42 @@ def extract_from_image(image_path, document_type):
         ],
         response_format={"type": "json_object"},
         temperature=0,
-        # max_tokens=800
+        max_tokens=900
     )
 
+
     content = response.choices[0].message.content
-    data = json.loads(content)
-    validated = DocumentExtraction(**data)
+    if not content:
+        raise RuntimeError("Model returned empty response.")
+
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Model returned invalid JSON: {exc}")
+    
+    # Validate according to document type
+    if document_type == "10th_marksheet":
+        validated = Class10Schema(**data)
+    elif document_type == "12th_marksheet":
+        validated = Class12Schema(**data)
+    elif document_type == "college_marksheet":
+        validated = CollegeSchema(**data)
+    else:
+        raise ValueError(f"Unsupported document type: {document_type}")
+
+    print("DOCUMENT DATA EXTRACTING DONE..")
+
     return validated.model_dump()
 
-def extract_from_pdf(pdf_path, document_type, output_dir):
-    image_paths = convert_pdf_to_images(pdf_path, output_dir)
-    page_results = []
-    for page_number, image_path in enumerate(image_paths, start=1):
-        print(f"    Sending page {page_number} to Groq...\n\n")
-        result = extract_from_image(image_path, document_type)
-        page_results.append({
-            "page": page_number,
-            "image": str(image_path),
-            "data": result
-        })
-    return page_results
+# def extract_from_pdf(pdf_path, document_type, output_dir):
+#     image_paths = convert_pdf_to_images(pdf_path, output_dir)
+#     page_results = []
+#     for page_number, image_path in enumerate(image_paths, start=1):
+#         print(f"    Sending page {page_number} to Groq...\n\n")
+#         result = extract_from_image(image_path, document_type)
+#         page_results.append({
+#             "page": page_number,
+#             "image": str(image_path),
+#             "data": result
+#         })
+#     return page_results

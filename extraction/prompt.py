@@ -1,458 +1,433 @@
-def build_extraction_prompt(document_type):
-    return f'''
-You are a highly accurate document data extraction system for academic
-certificates, marksheets, scorecards, and educational documents.
-
-Document type: {document_type}
-
-Your task is to extract information from the visible document and assign
-each value to the CORRECT SEMANTIC FIELD.
-
-==================================================
-IMPORTANT: SEMANTIC EXTRACTION
-==================================================
-
-DO NOT assign a value to a field merely because it looks like the expected
-data type.
-
-For every value, first determine:
-
-1. What does the value represent?
-2. What label is associated with it?
-3. What section/table does it belong to?
-4. Is the association clear from the document?
-
-If the meaning of a value is unclear, return null instead of guessing.
-
-==================================================
-1. NAME
-==================================================
-
-Extract the student's name only from the student's name field or an
-unambiguous statement identifying the student.
-
-Examples:
-
-"This is to certify that FARAZ KHAN"
-→ name = "FARAZ KHAN"
-
-Do not confuse the student's name with:
-- Father's name
-- Mother's name
-- Guardian's name
-- School name
-- Teacher/examiner name
-- Principal name
-- Controller of Examination name
-
-Preserve the name exactly as written.
-
-==================================================
-2. DATE OF BIRTH
-==================================================
-
-This is a CRITICAL field.
-
-Only extract a value as `dob` if the document explicitly identifies
-that value as the student's Date of Birth.
-
-Acceptable labels include:
-
-- Date of Birth
-- DOB
-- D.O.B.
-- Birth Date
-- जन्म तिथि
-
-The date must be clearly associated with one of these labels.
-
-DO NOT assume that every date on the document is DOB.
-
-NEVER use the following as DOB unless explicitly labelled as DOB:
-
-- Date printed near the student's photograph
-- Photograph date
-- Photo capture date
-- Certificate issue date
-- Document date
-- Examination date
-- Result date
-- Printing date
-- Scanning date
-- Admission date
-- Registration date
-- Academic session date
-- Any unrelated date appearing elsewhere
-
-For example, if the photograph contains:
-
-FARAZ KHAN
-04-11-2020
-
-DO NOT set:
-
-"dob": "04-11-2020"
-
-unless the document explicitly identifies 04-11-2020 as the Date of Birth.
-
-If no clearly labelled DOB exists:
-
-"dob": null
-
-NEVER infer DOB from age, examination year, registration number,
-photograph, or any other information.
-
-==================================================
-3. FATHER / GUARDIAN NAME
-==================================================
-
-Extract the value according to its label.
-
-Examples:
-
-"Father's Name MOHD SAJID KHAN"
-→ father_name = "MOHD SAJID KHAN"
-
-"Father's / Guardian's Name MOHD SAJID KHAN"
-→ father_name = "MOHD SAJID KHAN"
-
-Do not confuse father's/guardian's name with the student's name or
-mother's name.
-
-==================================================
-4. MOTHER'S NAME
-==================================================
-
-Extract only when explicitly associated with:
-
-- Mother's Name
-- Mother Name
-- माता का नाम
-
-Do not infer the mother's name from any other source.
-
-If absent:
-
-"mother_name": null
-
-==================================================
-5. ROLL NUMBER
-==================================================
-
-Extract only the value associated with:
-
-- Roll No.
-- Roll Number
-- रोल नंबर
-
-Do not confuse it with:
-
-- Registration number
-- Certificate number
-- School code
-- Centre code
-- Admission number
-- Subject code
-- Candidate ID
-
-Preserve the value exactly as written.
-
-==================================================
-6. REGISTRATION NUMBER
-==================================================
-
-If a registration number is present, extract it separately.
-
-Do not confuse registration number with roll number.
-
-==================================================
-7. DOCUMENT DATE & ACADEMIC YEARS
-==================================================
-
-If the document contains a date that clearly refers to the document,
-certificate, or marksheet itself, store it as `document_date`.
-
-Examples:
-
-"Dated : 22-07-2022"
-"Date of Issue : 22-07-2022"
-
-→ document_date = "22-07-2022"
-
-If passing year is visible, extract as `passing_year`.
-If academic year is visible, extract as `academic_year`.
-If semester is visible, extract as `semester`.
-
-A document date MUST NOT be stored as `dob`.
-
-If the date has no clear semantic association, do not assign it to DOB.
-
-==================================================
-7.5 OTHER IDENTITY & INSTITUTION FIELDS
-==================================================
-
-Extract the following if explicitly visible:
-- `gender` (M/F/Male/Female/Other)
-- `category` (General/SC/ST/OBC)
-- `enrollment_no` (Usually on college degrees)
-- `address`, `city`, `district`, `state`, `pincode`
-- `school`, `college`, `university`, `board`
-- `course`, `branch`
-
-==================================================
-8. PERCENTAGE
-==================================================
-
-Extract percentage ONLY if it is explicitly printed as a percentage
-in the document.
-
-Examples:
-
-"Percentage: 86.4%"
-"86.4%"
-
-Do NOT calculate percentage from marks.
-
-If percentage is not explicitly printed:
-
-"percentage": null
-
-==================================================
-9. CGPA
-==================================================
-
-Extract CGPA only when it is explicitly present and clearly labelled.
-
-Do NOT calculate CGPA from marks.
-
-If CGPA is not present:
-
-"cgpa": null
-
-==================================================
-10. RESULT
-==================================================
-
-Extract the official result exactly as shown.
-
-Examples:
-
-PASS
-FAIL
-COMPARTMENT
-
-Do not infer result from marks.
-
-==================================================
-11. SUBJECT-WISE MARKS
-==================================================
-
-This is a CRITICAL section.
-
-Read the marks table according to its actual ROWS and COLUMNS.
-
-For every subject, extract:
-
-- subject_name
+import json
+
+from config.schemas import (
+    Class10Schema,
+    Class12Schema,
+    CollegeSchema,
+)
+
+
+# ============================================================
+# COMMON EXTRACTION RULES
+# ============================================================
+
+_COMMON_RULES = """
+GENERAL RULES:
+- Read the entire document carefully.
+- Extract ONLY information explicitly visible in the document.
+- Never guess, infer, calculate, or correct values.
+- Use the printed labels and table column headers to identify fields.
+- If a field is missing, blank, unclear, or unreadable, return null.
+- Empty marks, "-", "AB", "NA" or similar non-numeric entries must be null.
+- Preserve names, IDs and text as printed.
+- Keep dates in the format visible on the document.
+- Do not confuse Roll No., Registration No., Enrollment No. and Serial No.
+- Do not use information from the filename.
+- Do not extract browser headers, URLs, timestamps or scan metadata.
+- Read every row of the marks table.
+- Do not merge information from different documents.
+"""
+
+
+# ============================================================
+# CLASS 10
+# ============================================================
+
+_CLASS10_PROMPT = """
+You are an academic document extraction system.
+
+DOCUMENT TYPE:
+Class 10 / Secondary / High School marksheet or certificate.
+
+Extract the following information if explicitly printed.
+
+CANDIDATE:
+- name
+- dob
+- father_name
+- mother_name
+- gender
+
+IDENTIFIERS:
+- roll_no
+- registration_no
+- serial_no
+
+ACADEMIC / INSTITUTION:
+- board
+- school
+- institution_code
+- academic_year
+- passing_year
+- exam_name
+
+ADDRESS:
+- address
+- city
+- district
+- state
+- pincode
+
+RESULT:
+- total_marks_obtained
+- total_max_marks
+- percentage
+- result
+
+MARKS:
+For every subject row, use the subject name as the dictionary key.
+
+For each subject extract:
+- theory
+- practical
+- total
+- max_marks
+
+Read the table headers carefully:
+- Theory / TH / Written → theory
+- Practical / PR / IA → practical
+- Total → total
+- Maximum Marks / Max → max_marks
+
+If a marks column is absent, use null.
+
+IMPORTANT:
+- Include every subject shown in the marks table.
+- Do not calculate totals or percentages.
+- Do not put maximum marks into obtained marks.
+- Preserve subject names as printed.
+- If duplicate subject names exist, use a unique key without losing either row.
+
+EXTRA DETAILS:
+Store other useful labelled information that does not fit the above fields in:
+"extra_details": {}
+
+Do not put marks-table rows inside extra_details.
+
+Return ONLY valid JSON matching the provided schema.
+"""
+
+
+# ============================================================
+# CLASS 12
+# ============================================================
+
+_CLASS12_PROMPT = """
+You are an academic document extraction system.
+
+DOCUMENT TYPE:
+Class 12 / Senior Secondary / Intermediate marksheet or certificate.
+
+Extract the following information if explicitly printed.
+
+CANDIDATE:
+- name
+- dob
+- father_name
+- mother_name
+- gender
+
+IDENTIFIERS:
+- roll_no
+- registration_no
+- serial_no
+
+ACADEMIC / INSTITUTION:
+- board
+- school
+- institution_code
+- stream
+- academic_year
+- passing_year
+- exam_name
+
+ADDRESS:
+- address
+- city
+- district
+- state
+- pincode
+
+RESULT:
+- total_marks_obtained
+- total_max_marks
+- percentage
+- result
+
+MARKS:
+For every subject row, use the subject name as the dictionary key.
+
+For each subject extract:
+- theory
+- practical
+- total
+- max_marks
+- subject_type
+
+COLUMN MAPPING:
+- Theory / Written → theory
+- Practical / PR / IA → practical
+- Total / Obtained → total
+- Maximum Marks / Max → max_marks
+- Type → subject_type
+
+If a column is absent, use null.
+
+IMPORTANT:
+- Include every subject shown in the marks table.
+- Include additional/elective subjects if present.
+- Do not calculate totals or percentages.
+- Do not infer stream from subjects; extract it only if printed.
+- Do not put maximum marks into obtained marks.
+- Preserve subject names exactly as printed.
+- If duplicate subject names exist, use a unique key without losing data.
+
+EXTRA DETAILS:
+Store other useful labelled information that does not fit the above fields in:
+"extra_details": {}
+
+Do not put marks-table rows inside extra_details.
+
+Return ONLY valid JSON matching the provided schema.
+"""
+
+
+# ============================================================
+# COLLEGE / UNIVERSITY
+# ============================================================
+
+_COLLEGE_PROMPT = """
+You are an academic document extraction system.
+
+DOCUMENT TYPE:
+College / University marksheet, semester result, grade card or transcript.
+
+Extract the following information if explicitly printed.
+
+CANDIDATE:
+- name
+- dob
+- father_name
+- mother_name
+- gender
+
+IDENTIFIERS:
+- roll_no
+- registration_no
+- enrollment_no
+- serial_no
+
+INSTITUTION:
+- college
+- university
+- institution_code
+
+PROGRAM:
+- course
+- course_code
+- branch
+- branch_code
+- exam_name
+- semester
+- session
+- academic_year
+- passing_year
+
+ADDRESS:
+- address
+- city
+- district
+- state
+- pincode
+
+RESULT:
+- total_marks_obtained
+- total_max_marks
+- sgpa
+- cgpa
+- percentage
+- result
+
+MARKS:
+For EVERY subject row, use the subject name as the dictionary key.
+
+For each subject extract:
 - subject_code
-- theory_marks
-- practical_marks
-- total_marks
+- subject_type
+- internal
+- external
+- total
+- max_marks
+- grade
+- grade_points
+- credits
 
-The relationship must be:
+COLUMN MAPPING:
+- Subject Code / Code → subject_code
+- Type → subject_type
+- Internal Obtained → internal
+- External Obtained → external
+- Total Obtained / Total → total
+- Maximum Marks / Max → max_marks
+- Grade / Letter Grade → grade
+- Grade Point / Grade Points → grade_points
+- Credit / Credits → credits
 
-SUBJECT CODE
-        ↓
-SUBJECT NAME
-        ↓
-THEORY MARKS
-        ↓
-PRACTICAL / INTERNAL MARKS
-        ↓
-TOTAL MARKS
+IMPORTANT:
+- Read the column headers before reading the rows.
+- Match values to their correct subject row.
+- Include every subject, including grade-only subjects.
+- Blank, "-", AB or NA marks must be null.
+- Never calculate total, SGPA, CGPA or percentage.
+- Never move internal/external marks between subjects.
+- Never put maximum marks into obtained marks.
+- Preserve subject names and codes as printed.
+- If duplicate subject names exist, use a unique key without losing either row.
 
-Read the table horizontally by row.
+PROGRAM DETAILS:
+- course: Extract the printed course/program name.
+- course_code: Extract the printed course code.
+- branch: Extract the printed branch/specialization.
+- branch_code: Extract the printed branch code.
+- exam_name: Extract the printed examination name.
+- session: Extract the full session exactly as printed.
+- academic_year: Extract the academic year if explicitly printed.
+- passing_year: Extract the year of passing if explicitly printed.
 
-Example:
+SEMESTER HANDLING:
 
-301 | ENGLISH CORE | 072 | 020 | 092
+College result documents may show multiple semester references.
 
+1. CURRENT SEMESTER:
+Find the standalone field that explicitly identifies the current/result
+semester, such as:
+    "Semester : 6"
+    "Semester : 4"
+Extract that numeric value into:
+    "semester"
+Examples:
+    "Semester : 6" → semester = 6
+    "Semester : 4" → semester = 4
+
+2. SEMESTERS COVERED:
+A header may contain a combined value such as:
+    "Semester : 5,6"
+    "Semester : 3,4"
+A combined value represents the semesters covered by the document.
+It is NOT the current semester.
+Store it in extra_details:
+   "Semesters covered": "5,6"
+or:
+   "Semesters covered": "3,4"
+
+3. WHEN BOTH EXIST:
+If the document contains both:
+   Header:    "Semester : 3,4"
+   Detail:    "Semester : 4"
+extract:
+   "semester": 4
+and:
+   "extra_details": {"Semesters covered": "3,4"}
+Similarly:
+   Header:    "Semester : 5,6"
+   Detail:    "Semester : 6"
 must become:
+   "semester": 6
+and:
+   "extra_details": {"Semesters covered": "5,6"}
 
-{{
-  "subject_name": "ENGLISH CORE",
-  "subject_code": "301",
-  "theory_marks": 72,
-  "practical_marks": 20,
-  "total_marks": 92
-}}
+4. PRIORITY:
+The standalone/current-semester field has higher priority than a
+combined semester value.
 
-Do NOT take numbers simply because they are visually close to a subject.
-Always determine their column position.
+NEVER put "3,4", "5,6", etc. into the integer "semester" field.
 
-==================================================
-12. MISSING MARKS
-==================================================
+If only a combined semester value is visible and no current semester
+can be identified, return:
+    "semester": null
 
-If a subject has no visible theory marks:
+and store the combined value in extra_details.
 
-"theory_marks": null
+Do not infer the current semester from the combined value.
+EXTRA DETAILS:
+Store other useful labelled information that does not fit the above fields in:
+"extra_details": {}
 
-If a subject has no visible practical marks:
+Examples:
+- Total Subjects
+- Total Credits
+- Remarks
+- Result Status
+- Previous Semester SGPA
+- Certification information
 
-"practical_marks": null
+Do not put table rows inside extra_details.
 
-If a subject has no visible total:
+Return ONLY valid JSON matching the provided schema.
+"""
 
-"total_marks": null
 
-Do NOT replace missing values with 0.
+# ============================================================
+# BUILD PROMPT
+# ============================================================
 
-Do NOT invent marks.
+def _schema_skeleton(schema_class, document_type):
+   """
+   Create a JSON skeleton directly from the Pydantic schema.
+   """
 
-==================================================
-13. MARKS VALIDATION
-==================================================
+   schema = {}
+   for field_name, field in schema_class.model_fields.items():
+      if field_name == "marks":
+         schema[field_name] = {"SUBJECT_NAME": {}}
+      elif field_name == "extra_details":
+         schema[field_name] = {}
+      elif field_name == "document_type":
+         schema[field_name] = document_type
+      else:
+         schema[field_name] = None
+   return json.dumps(schema,indent=2,ensure_ascii=False)
 
-Do not alter marks printed in the document.
 
-If:
+def build_extraction_prompt(document_type):
+   if document_type == "10th_marksheet":
+      prompt = _CLASS10_PROMPT
+      schema = Class10Schema
+      doc_type = "10th_marksheet"
 
-theory = 72
-practical = 20
-total = 92
+   elif document_type == "12th_marksheet":
+      prompt = _CLASS12_PROMPT
+      schema = Class12Schema
+      doc_type = "12th_marksheet"
 
-extract them exactly.
+   elif document_type == "college_marksheet":
+      prompt = _COLLEGE_PROMPT
+      schema = CollegeSchema
+      doc_type = "college_marksheet"
 
-If the arithmetic does not match, preserve the document values rather
-than modifying them.
+   else:
+      raise ValueError(f"Unsupported document type: {document_type}")
 
-==================================================
-14. PHOTO / IMAGE AREA
-==================================================
+   skeleton = _schema_skeleton(schema,doc_type)
 
-Treat text appearing inside or immediately around a student's photograph
-with caution.
+   return f"""
+{prompt}
 
-A photograph may contain:
+{_COMMON_RULES}
 
-- Photograph date
-- Photo ID
-- Camera date
-- Printing date
-- Other unrelated numbers
+OUTPUT FORMAT:
+Return ONLY one valid JSON object.
 
-Do NOT automatically treat such information as personal information.
+The JSON MUST follow this structure:
 
-In particular:
+{skeleton}
 
-A date near the photograph is NOT DOB unless explicitly labelled as DOB.
+Use:
+- null for missing/unreadable scalar values
+- {{}} for empty extra_details
+- {{}} for an empty marks dictionary
 
-==================================================
-15. NO GUESSING
-==================================================
-
-Never:
-
-- Guess missing information
-- Infer DOB
-- Calculate percentage
-- Calculate CGPA
-- Invent marks
-- Convert unrelated dates into DOB
-- Treat OCR noise as valid data
-- Merge unrelated numbers
-- Move marks between subjects
-- Assume a value belongs to a field without clear evidence
-
-When uncertain, return null.
-
-==================================================
-16. OUTPUT
-==================================================
-
-Return ONLY valid JSON.
-
-Use exactly this structure:
-
-{{
-  "document_type": "{document_type}",
-  "name": null,
-  "dob": null,
-  "gender": null,
-  "category": null,
-  "father_name": null,
-  "mother_name": null,
-  "guardian_name": null,
-  "roll_no": null,
-  "registration_no": null,
-  "enrollment_no": null,
-  "school": null,
-  "college": null,
-  "university": null,
-  "board": null,
-  "course": null,
-  "branch": null,
-  "academic_year": null,
-  "passing_year": null,
-  "semester": null,
-  "address": null,
-  "city": null,
-  "district": null,
-  "state": null,
-  "pincode": null,
-  "document_date": null,
-  "percentage": null,
-  "cgpa": null,
-  "result": null,
-  "subjects": [
-    {{
-      "subject_name": null,
-      "subject_code": null,
-      "theory_marks": null,
-      "practical_marks": null,
-      "total_marks": null
-    }}
-  ]
-}}
-
-==================================================
-FINAL CHECK BEFORE RETURNING JSON
-==================================================
-
-Before producing the final JSON, verify:
-
-1. Is DOB explicitly labelled?
-   If NO → dob = null.
-
-2. Is a date associated with the document/certificate?
-   If YES → document_date.
-
-3. Is a date located near the photograph?
-   If YES → do NOT assume it is DOB.
-
-4. Are student's, father's, mother's and guardian's names correctly
-   associated with their labels?
-
-5. Is the roll number actually labelled "Roll No."?
-
-6. Is registration number kept separate from roll number?
-
-7. Are subject codes mapped to the correct subjects?
-
-8. Are theory, practical and total marks mapped according to the
-   correct table columns?
-
-9. Are missing marks represented as null rather than 0?
-
-10. Was percentage calculated?
-    If YES → remove it and return null unless explicitly printed.
-
-11. Was CGPA calculated?
-    If YES → remove it and return null unless explicitly printed.
-
-12. Did you infer any information?
-    If YES → remove the inferred value.
-
-Return ONLY the JSON.
-'''
+Do not add fields that are not present in the schema.
+Do not return markdown.
+Do not explain your answer.
+"""

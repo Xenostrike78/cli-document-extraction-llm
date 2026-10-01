@@ -1,0 +1,341 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "cand001",
+
+      "documents": {
+        "class_10": [
+          {
+            "document_id": "doc001",
+            "document_type": "10th_marksheet",
+            "source_file": "candidate1_10th.pdf",
+
+            "name": "Arbaz Khan",
+            "dob": "2004-01-01",
+            "father_name": "Mohd XYZ",
+            "mother_name": "ABC",
+
+            "roll_no": "102345",
+            "registration_no": "REG123",
+            "serial_no": "S001",
+
+            "board": "CBSE",
+            "school": "ABC Public School",
+            "institution_code": "12345",
+
+            "academic_year": "2019-20",
+            "passing_year": 2020,
+
+            "address": null,
+            "city": "Moradabad",
+            "district": "Moradabad",
+            "state": "Uttar Pradesh",
+            "pincode": "244001",
+
+            "marks": {
+              "English": {
+                "theory": 82,
+                "practical": null,
+                "total": 82,
+                "max_marks": 100
+              },
+              "Mathematics": {
+                "theory": 91,
+                "practical": null,
+                "total": 91,
+                "max_marks": 100
+              }
+            },
+
+            "total_marks_obtained": 173,
+            "total_max_marks": 200,
+            "percentage": 86.5,
+            "result": "PASS",
+
+            "extra_details": {}
+          }
+        ],
+
+        "class_12": [
+          {
+            "document_id": "doc002",
+            "document_type": "12th_marksheet",
+            "source_file": "candidate1_12th.pdf",
+
+            "name": "Arbaz Khan",
+            "dob": "2004-01-01",
+            "father_name": "Mohd XYZ",
+            "mother_name": "ABC",
+
+            "roll_no": "202345",
+            "registration_no": "REG456",
+            "serial_no": "S002",
+
+            "board": "UP Board",
+            "school": "XYZ Inter College",
+            "institution_code": "67890",
+            "stream": "Science",
+
+            "academic_year": "2021-22",
+            "passing_year": 2022,
+
+            "address": null,
+            "city": "Moradabad",
+            "district": "Moradabad",
+            "state": "Uttar Pradesh",
+            "pincode": "244001",
+
+            "marks": {
+              "Physics": {
+                "theory": 71,
+                "practical": 27,
+                "total": 98,
+                "max_marks": 100,
+                "subject_type": "main"
+              },
+              "Mathematics": {
+                "theory": 91,
+                "practical": null,
+                "total": 91,
+                "max_marks": 100,
+                "subject_type": "main"
+              }
+            },
+
+            "total_marks_obtained": 189,
+            "total_max_marks": 200,
+            "percentage": 94.5,
+            "result": "PASS",
+
+            "extra_details": {}
+          }
+        ],
+
+        "college": [
+          {
+            "document_id": "doc003",
+            "document_type": "college_marksheet",
+            "source_file": "candidate1_sem1.pdf",
+
+            "name": "Arbaz Khan",
+            "dob": null,
+            "father_name": "Mohd XYZ",
+            "mother_name": null,
+
+            "roll_no": "2212345",
+            "registration_no": "REG789",
+            "enrollment_no": "ENR123",
+            "serial_no": "S003",
+
+            "college": "Noida Institute of Engineering and Technology",
+            "university": "AKTU",
+            "institution_code": "NIET001",
+
+            "course": "B.Tech",
+            "course_code": "BT",
+            "branch": "Computer Science",
+            "branch_code": "CSE",
+
+            "exam_name": "B.Tech First Semester",
+            "semester": 1,
+            "session": "2022-23",
+            "academic_year": "2022-23",
+            "passing_year": 2023,
+
+            "marks": {
+              "Programming in C": {
+                "subject_code": "KCS101",
+                "internal": 28,
+                "external": 61,
+                "total": 89,
+                "max_marks": 100,
+                "grade": "A+",
+                "grade_points": 9,
+                "credits": 4
+              }
+            },
+
+            "total_marks_obtained": 89,
+            "total_max_marks": 100,
+
+            "sgpa": 8.9,
+            "cgpa": null,
+            "percentage": null,
+            "result": "PASS",
+
+            "extra_details": {}
+          }
+        ]
+      }
+    },
+
+    {
+      "candidate_id": "cand002",
+
+      "documents": {
+        "class_10": [
+          {
+            "document_id": "doc004",
+            "document_type": "10th_marksheet",
+            "source_file": "candidate2_10th.pdf",
+
+            "name": "Rahul Sharma",
+            "dob": "2003-06-15",
+            "father_name": "Rajesh Sharma",
+            "mother_name": "Sunita Sharma",
+
+            "roll_no": "112233",
+            "registration_no": "REG111",
+            "serial_no": "S004",
+
+            "board": "CBSE",
+            "school": "Delhi Public School",
+            "institution_code": "54321",
+
+            "academic_year": "2018-19",
+            "passing_year": 2019,
+
+            "address": null,
+            "city": "Delhi",
+            "district": "South Delhi",
+            "state": "Delhi",
+            "pincode": "110001",
+
+            "marks": {
+              "English": {
+                "theory": 88,
+                "practical": null,
+                "total": 88,
+                "max_marks": 100
+              },
+              "Mathematics": {
+                "theory": 94,
+                "practical": null,
+                "total": 94,
+                "max_marks": 100
+              }
+            },
+
+            "total_marks_obtained": 182,
+            "total_max_marks": 200,
+            "percentage": 91.0,
+            "result": "PASS",
+
+            "extra_details": {}
+          }
+        ],
+
+        "class_12": [
+          {
+            "document_id": "doc005",
+            "document_type": "12th_marksheet",
+            "source_file": "candidate2_12th.pdf",
+
+            "name": "Rahul Sharma",
+            "dob": "2003-06-15",
+            "father_name": "Rajesh Sharma",
+            "mother_name": "Sunita Sharma",
+
+            "roll_no": "223344",
+            "registration_no": "REG222",
+            "serial_no": "S005",
+
+            "board": "CBSE",
+            "school": "Delhi Public School",
+            "institution_code": "54321",
+            "stream": "Science",
+
+            "academic_year": "2020-21",
+            "passing_year": 2021,
+
+            "address": null,
+            "city": "Delhi",
+            "district": "South Delhi",
+            "state": "Delhi",
+            "pincode": "110001",
+
+            "marks": {
+              "Physics": {
+                "theory": 75,
+                "practical": 25,
+                "total": 100,
+                "max_marks": 100,
+                "subject_type": "main"
+              },
+              "Mathematics": {
+                "theory": 89,
+                "practical": null,
+                "total": 89,
+                "max_marks": 100,
+                "subject_type": "main"
+              }
+            },
+
+            "total_marks_obtained": 189,
+            "total_max_marks": 200,
+            "percentage": 94.5,
+            "result": "PASS",
+
+            "extra_details": {}
+          }
+        ],
+
+        "college": [
+          {
+            "document_id": "doc006",
+            "document_type": "college_marksheet",
+            "source_file": "candidate2_sem1.pdf",
+
+            "name": "Rahul Sharma",
+            "dob": null,
+            "father_name": "Rajesh Sharma",
+            "mother_name": null,
+
+            "roll_no": "2215678",
+            "registration_no": "REG333",
+            "enrollment_no": "ENR456",
+            "serial_no": "S006",
+
+            "college": "ABC Institute of Technology",
+            "university": "AKTU",
+            "institution_code": "ABC001",
+
+            "course": "B.Tech",
+            "course_code": "BT",
+            "branch": "Information Technology",
+            "branch_code": "IT",
+
+            "exam_name": "B.Tech First Semester",
+            "semester": 1,
+            "session": "2021-22",
+            "academic_year": "2021-22",
+            "passing_year": 2022,
+
+            "marks": {
+              "Data Structures": {
+                "subject_code": "KCS301",
+                "internal": 26,
+                "external": 60,
+                "total": 86,
+                "max_marks": 100,
+                "grade": "A",
+                "grade_points": 8,
+                "credits": 4
+              }
+            },
+
+            "total_marks_obtained": 86,
+            "total_max_marks": 100,
+
+            "sgpa": 8.6,
+            "cgpa": null,
+            "percentage": null,
+            "result": "PASS",
+
+            "extra_details": {}
+          }
+        ]
+      }
+    }
+  ]
+}

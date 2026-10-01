@@ -1,0 +1,262 @@
+{
+  "candidate_id": "cand001",
+  "documents": {
+    "class_10": [
+      {
+        "document_id": "cand001_10",
+        "document_type": "10th_marksheet",
+        "source_file": "10.pdf",
+        "name": "MOHD ARBAZ KHAN",
+        "dob": "01-04-2004",
+        "father_name": "SAGHEER KHAN",
+        "mother_name": "SHIMMI KHAN",
+        "gender": null,
+        "roll_no": "25163040",
+        "registration_no": "U121/81198/0088",
+        "serial_no": "SS ET 2021/1",
+        "board": "CENTRAL BOARD OF SECONDARY EDUCATION",
+        "school": "81198 - DELHI PUB GLOBAL SCH SIHORA GOVIND MORADABAD UP",
+        "institution_code": "81198",
+        "academic_year": null,
+        "passing_year": 2021,
+        "address": null,
+        "city": "Delhi",
+        "district": null,
+        "state": null,
+        "pincode": null,
+        "marks": {
+          "ENGLISH LNG & LIT.": {
+            "theory": 72.0,
+            "practical": 20.0,
+            "total": 92.0,
+            "max_marks": null
+          },
+          "HINDI COURSE-A": {
+            "theory": 64.0,
+            "practical": 18.0,
+            "total": 82.0,
+            "max_marks": null
+          },
+          "MATHEMATICS STANDARD": {
+            "theory": 62.0,
+            "practical": 19.0,
+            "total": 81.0,
+            "max_marks": null
+          },
+          "SCIENCE": {
+            "theory": 56.0,
+            "practical": 19.0,
+            "total": 75.0,
+            "max_marks": null
+          },
+          "SOCIAL SCIENCE": {
+            "theory": 57.0,
+            "practical": 20.0,
+            "total": 77.0,
+            "max_marks": null
+          },
+          "COMPUTER APPLICATIONS": {
+            "theory": 41.0,
+            "practical": 50.0,
+            "total": 91.0,
+            "max_marks": null
+          }
+        },
+        "total_marks_obtained": null,
+        "total_max_marks": null,
+        "percentage": null,
+        "result": "PASS",
+        "extra_details": {
+          "date_of_issue": "03-08-2021"
+        }
+      }
+    ],
+    "class_12": [
+      {
+        "document_id": "cand001_12",
+        "document_type": "12th_marksheet",
+        "source_file": "12.pdf",
+        "name": "MOHD ARBAZ KHAN",
+        "dob": "01-04-2004",
+        "father_name": "SAGHEER KHAN",
+        "mother_name": "SHIMMI KHAN",
+        "gender": null,
+        "roll_no": "25671497",
+        "registration_no": null,
+        "serial_no": null,
+        "board": "CENTRAL BOARD OF SECONDARY EDUCATION",
+        "school": "DELHI PUB GLOBAL SCH SIHORA GOVIND MORADABAD UP (81198)",
+        "institution_code": "81198",
+        "stream": null,
+        "academic_year": null,
+        "passing_year": 2023,
+        "address": null,
+        "city": null,
+        "district": null,
+        "state": null,
+        "pincode": null,
+        "marks": {
+          "ENGLISH CORE": {
+            "theory": 73.0,
+            "practical": 20.0,
+            "total": 93.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "MATHEMATICS": {
+            "theory": 40.0,
+            "practical": 20.0,
+            "total": 60.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "PHYSICS": {
+            "theory": 38.0,
+            "practical": 29.0,
+            "total": 67.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "CHEMISTRY": {
+            "theory": 46.0,
+            "practical": 28.0,
+            "total": 74.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "COMPUTER SCIENCE": {
+            "theory": 56.0,
+            "practical": 30.0,
+            "total": 86.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "HINDI CORE": {
+            "theory": 60.0,
+            "practical": 20.0,
+            "total": 80.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "WORK EXPERIENCE": {
+            "theory": null,
+            "practical": null,
+            "total": null,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "HEALTH & PHYSICAL EDUCATION": {
+            "theory": null,
+            "practical": null,
+            "total": null,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "GENERAL STUDIES": {
+            "theory": null,
+            "practical": null,
+            "total": null,
+            "max_marks": null,
+            "subject_type": null
+          }
+        },
+        "total_marks_obtained": null,
+        "total_max_marks": null,
+        "percentage": null,
+        "result": "PASS",
+        "extra_details": {
+          "date_of_declaration_of_result": "12/05/2023",
+          "exam_name": "SENIOR SCHOOL CERTIFICATE EXAMINATION, 2023",
+          "digital_signature_date": "18/06/2023 16:54:18 IST"
+        }
+      }
+    ],
+    "college": [
+      {
+        "document_id": "cand001_sem6",
+        "document_type": "college_marksheet",
+        "source_file": "sem6.pdf",
+        "name": "MOHD ARBAZ KHAN",
+        "dob": null,
+        "father_name": "SAGHEER KHAN",
+        "mother_name": "SHIMMI KHAN",
+        "gender": "Male",
+        "roll_no": "2301331530092",
+        "registration_no": null,
+        "enrollment_no": "230133153053585",
+        "serial_no": null,
+        "college": "NOIDA INSTITUTE OF ENGINEERING & TECHNOLOGY, GREATER NOIDA",
+        "university": "Dr. A.P.J Abdul Kalam Technical University, Uttar Pradesh, Lucknow",
+        "institution_code": "133",
+        "course": "Bachelor of Technology",
+        "course_code": "04",
+        "branch": "Computer Science And Engineering(Artificial Intelligence & Machine Learning)",
+        "branch_code": "153",
+        "exam_name": "NIELT Result (One View)",
+        "semester": 6,
+        "session": "2025-26 (JAN_JUNE) (REGULAR)(EVEN)",
+        "academic_year": null,
+        "passing_year": null,
+        "marks": {
+          "Natural Language Processing": {
+            "subject_code": "BCSAI0601",
+            "internal": 33.0,
+            "external": 81.0,
+            "total": 114.0,
+            "max_marks": 150.0,
+            "grade": "B+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Advanced Java Programming": {
+            "subject_code": "BCSAI0612",
+            "internal": 40.0,
+            "external": 45.0,
+            "total": 85.0,
+            "max_marks": 150.0,
+            "grade": "C",
+            "grade_points": null,
+            "credits": null
+          },
+          "Web Development using MEAN Stack": {
+            "subject_code": "BCSE0614",
+            "internal": 36.0,
+            "external": 82.0,
+            "total": 118.0,
+            "max_marks": 150.0,
+            "grade": "B+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Soft Skills & Personality Development": {
+            "subject_code": "BOE0665",
+            "internal": 36.0,
+            "external": 76.0,
+            "total": 112.0,
+            "max_marks": 150.0,
+            "grade": "B+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Natural Language Processing Lab": {
+            "subject_code": "BCSAI0651",
+            "internal": 22.0,
+            "external": 22.0,
+            "total": 44.0,
+            "max_marks": 50.0,
+            "grade": "A",
+            "grade_points": null,
+            "credits": null
+          }
+        },
+        "total_marks_obtained": null,
+        "total_max_marks": null,
+        "sgpa": null,
+        "cgpa": null,
+        "percentage": null,
+        "result": null,
+        "extra_details": {}
+      }
+    ]
+  }
+}

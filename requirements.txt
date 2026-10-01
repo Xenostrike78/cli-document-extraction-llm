@@ -9,4 +9,4 @@ rapidfuzz
 unidecode
 reportlab
 scikit-learn
-
+openai

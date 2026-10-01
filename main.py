@@ -9,65 +9,152 @@ Run: python main.py
 """
 
 from pathlib import Path
-
+import json,os
 from ingestion.folder_walker import walk_candidates
-from classification.document_classifier import classify_document
-from extraction.vision_extractor import extract_from_image, extract_from_pdf
+from classification.document_classifier import classify_document,classify_image
+from extraction.pdf_converter import convert_pdf_to_images
+from extraction.vision_extractor import extract_from_image
 from derivation.rule_engine import compute_derived_fields, load_rules
 from identity.resolver import resolve_candidate_identity
 from verification.consistency_checker import run_consistency_check
 from report.report_generator import generate_candidate_report
 
-ROOT_FOLDER = "NIC"
-CONVERTED_FOLDER = Path("converted_images")
-REPORTS_FOLDER = Path("reports")
+BASE_DIR = Path(__file__).resolve().parent
 
+ROOT_FOLDER = BASE_DIR / "NIC"
+CONVERTED_FOLDER = BASE_DIR / "converted_images"
+OUTPUT_FOLDER = BASE_DIR / "output"
+REPORTS_FOLDER = BASE_DIR / "reports"
+
+IMAGE_EXTENSIONS = {".jpg",".jpeg",".png"}
 
 def extract_candidate_records(candidate: dict) -> dict:
     """
-    Runs classification + extraction for every file in a candidate's
-    folder. Returns {doc_type: extracted_record_dict}. When a
-    document type appears more than once (e.g. two scans of the same
-    marksheet), the last extraction wins and a note is printed --
-    duplicates are a data-hygiene issue for the human reviewer, not
-    something this stage should silently merge.
+    Process every document belonging to a candidate.
+
+    Pipeline:
+
+        PDF
+          -> JPG pages
+          -> Vision classification
+          -> Type-specific extraction
+
+        Image
+          -> Vision classification
+          -> Type-specific extraction
+
+    Returns:
+
+        {
+            "10th_marksheet": [...],
+            "12th_marksheet": [...],
+            "college_marksheet": [...]
+        }
+
+    Each document type contains a list because a candidate may have
+    multiple documents of the same type.
     """
     candidate_id = candidate["candidate_id"]
-    records = {}
+    records = {
+        "class_10": [],
+        "class_12": [],
+        "college": [],
+    }
 
     for file_info in candidate["files"]:
         file_path = Path(file_info["path"])
-        print(f"  Processing: {file_path.name}")
-
-        document_type = classify_document(file_path)
-        if document_type == "unknown":
-            print(f"    Unknown document type -- skipped: {file_path.name}")
-            continue
+        print("\n" + "-" * 70)
+        print(f"Processing: {file_path.name}")
+        print("-" * 70)
 
         suffix = file_path.suffix.lower()
         try:
+            # ========================================================
+            # STEP 1: CONVERT PDF TO JPG
+            # ========================================================
             if suffix == ".pdf":
-                output_dir = CONVERTED_FOLDER / candidate_id / file_path.stem
-                page_results = extract_from_pdf(file_path, document_type, output_dir)
-                # Use the first page's extraction as the document-level record.
-                # Multi-page marksheets with subject tables on later pages would
-                # need a merge step here -- left as a documented extension point.
-                record = page_results[0]["data"] if page_results else None
-            elif suffix in {".jpg", ".jpeg", ".png"}:
-                record = extract_from_image(file_path, document_type)
+                # output_dir = (CONVERTED_FOLDER/ candidate_id/ file_path.stem)
+                output_dir = CONVERTED_FOLDER/ candidate_id
+                print("  PDF detected.")
+                print("  Converting PDF pages to JPG...")
+                
+                image_paths = convert_pdf_to_images(file_path,output_dir)
+                
+                if not image_paths:
+                    print("  No pages generated. Skipping.")
+                    continue
+
+            elif suffix in IMAGE_EXTENSIONS:
+                image_paths = [file_path]
             else:
-                print(f"    Unsupported file for vision extraction: {file_path.name}")
+                print(f"  Unsupported file type: {file_path.suffix}")
                 continue
+
+            # ========================================================
+            # STEP 2: CLASSIFY DOCUMENT USING VISION
+            # ========================================================
+
+            first_page = image_paths[0]
+            print(f"  Classifying document from: "f"{first_page.name}")
+
+            document_type = classify_image(first_page)
+            print(f"  Document type: {document_type}")
+
+            if document_type == "unknown":
+                print("  Could not determine document type. ""Skipping document.")
+                continue
+
+            
+            # IMAGE SAVED
+            if suffix == ".pdf":
+                output_names = {
+                    "10th_marksheet": "class10.jpg",
+                    "12th_marksheet": "class12.jpg",
+                    "college_marksheet": "cllg.jpg",
+                }
+                new_name = output_names[document_type]
+                final_image_path = (CONVERTED_FOLDER/ candidate_id/ new_name)
+                first_page.rename(final_image_path)
+                first_page = final_image_path
+                print(f"  Converted image saved as: "f"{first_page}")
+            
+            # ========================================================
+            # STEP 3: TYPE-SPECIFIC EXTRACTION
+            # ========================================================
+            
+            print(f"  Extracting first page: {first_page.name}...")
+            record = extract_from_image(first_page,document_type)
+            
+            record["document_id"] = (
+                f"{candidate_id}_{file_path.stem}"
+            )
+
+            record["source_file"] = file_path.name
+
+            # ========================================================
+            # STEP 6: STORE IN CORRECT DOCUMENT BUCKET
+            # ========================================================
+
+            if document_type == "10th_marksheet":
+                records["class_10"].append(record)
+            elif document_type == "12th_marksheet":
+                records["class_12"].append(record)
+            elif document_type == "college_marksheet":
+                records["college"].append(record)
+            else:
+                print(f"  Unsupported classified type: "f"{document_type}")
+
+
         except Exception as exc:
             print(f"    Extraction failed for {file_path.name}: {exc}")
             continue
 
-        if record is None:
-            continue
+        # if record is None:
+        #     continue
 
-        if document_type in records:
-            print(f"    Note: multiple files classified as '{document_type}' -- using latest")
-        records[document_type] = record
+        # if document_type in records:
+        #     print(f"    Note: multiple files classified as '{document_type}' -- using latest")
+        # records[document_type] = record
 
     return records
 
@@ -80,31 +167,80 @@ def process_candidate(candidate: dict, rules: dict):
 
     records = extract_candidate_records(candidate)
 
-    self_reported = candidate.get("self_reported") or {}
-    if self_reported:
-        records["self_reported"] = self_reported
-    else:
-        print("  No self_reported.json found -- self-reported fields will show as MISSING.")
 
+    # ================================================================
+    # SELF REPORTED DATA
+    # ================================================================
+
+    # self_reported = candidate.get("self_reported") or {}
+    # if self_reported:
+        # records["self_reported"] = self_reported
+    # else:
+        # print("  No self_reported.json found -- self-reported fields will show as MISSING.")
+    
+    # Check whether there is anything useful
+    documents_found = (records["class_10"] or records["class_12"] or records["college"])
+
+    if not documents_found:
+        print("  No usable documents for this candidate.")
+        return
+
+    # Build final candidate JSON
+    candidate_output = {
+        "candidate_id": candidate_id,
+        "documents": {
+            "class_10": records["class_10"],
+            "class_12": records["class_12"],
+            "college": records["college"],
+        },
+    }
+
+    # Save JSON
+    OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+
+    output_path = OUTPUT_FOLDER / f"{candidate_id}.json"
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(
+            candidate_output,
+            f,
+            indent=2,
+            ensure_ascii=False,
+        )
+
+    print(f"\n  JSON saved: {output_path}")
+
+    '''
     if not records:
         print("  No usable documents for this candidate. Skipping report.")
         return
 
-    # Derived fields computed per document (percentage from CGPA,
-    # annual income from monthly income, etc.), then folded back into
-    # each record so consistency checks compare like-for-like values.
+    # ================================================================
+    # DERIVED FIELDS
+    # ================================================================
+
     derived_by_doc = {}
-    for doc_type, record in records.items():
-        derived = compute_derived_fields(record, rules)
-        derived_by_doc[doc_type] = derived
-        for field_name, info in derived.items():
-            if info["value"] is not None:
-                record[field_name] = info["value"]
 
-    identity_results = resolve_candidate_identity(records) if len(records) > 1 else []
-    consistency_results = run_consistency_check(records, identity_results)
+    for doc_group in ("class_10","class_12","college",):
+        for record in records[doc_group]:
+            derived = compute_derived_fields(record,rules)
+            derived_by_doc.setdefault(doc_group,[]).append(derived)
+            for field_name, info in derived.items():
+                if info["value"] is not None:
+                    record[field_name] = info["value"]
 
-    output_path = REPORTS_FOLDER / f"{candidate_id}_report.pdf"
+
+    # IDENTITY RESOLUTION
+    identity_results = resolve_candidate_identity(records)
+
+    #CONSISTENCY CHECK
+    consistency_results = run_consistency_check(records,identity_results)
+
+    #REPORT
+    REPORTS_FOLDER.mkdir(parents=True,exist_ok=True)
+
+    output_path = (REPORTS_FOLDER/ f"{candidate_id}_report.pdf")
+
     generate_candidate_report(
         candidate_id=candidate_id,
         records=records,
@@ -113,7 +249,9 @@ def process_candidate(candidate: dict, rules: dict):
         identity_results=identity_results,
         output_path=output_path,
     )
+
     print(f"  Report generated: {output_path}")
+    '''
 
 
 def main():

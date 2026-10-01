@@ -1,0 +1,263 @@
+{
+  "candidate_id": "cand002",
+  "documents": {
+    "class_10": [
+      {
+        "document_id": "cand002_CLASS_10",
+        "document_type": "10th_marksheet",
+        "source_file": "CLASS_10.pdf",
+        "name": "FARAZ KHAN",
+        "dob": "10-07-2004",
+        "father_name": "MOHD SAJID KHAN",
+        "mother_name": "GAZALA PARVEEN",
+        "gender": null,
+        "roll_no": "21175457",
+        "registration_no": "U120/54110/0159",
+        "serial_no": null,
+        "board": "CENTRAL BOARD OF SECONDARY EDUCATION",
+        "school": "SUN VALLEY INTNL SCH VAISHALI GHAZIABAD UP",
+        "institution_code": "60291",
+        "academic_year": null,
+        "passing_year": 2020,
+        "address": null,
+        "city": "Delhi",
+        "district": null,
+        "state": null,
+        "pincode": null,
+        "marks": {
+          "ENGLISH LANG & LIT.": {
+            "theory": 80.0,
+            "practical": 20.0,
+            "total": 100.0,
+            "max_marks": null
+          },
+          "HINDI COURSE-B": {
+            "theory": 73.0,
+            "practical": 18.0,
+            "total": 91.0,
+            "max_marks": null
+          },
+          "MATHEMATICS STANDARD": {
+            "theory": 64.0,
+            "practical": 18.0,
+            "total": 82.0,
+            "max_marks": null
+          },
+          "SCIENCE": {
+            "theory": 58.0,
+            "practical": 18.0,
+            "total": 76.0,
+            "max_marks": null
+          },
+          "SOCIAL SCIENCE": {
+            "theory": 75.0,
+            "practical": 19.0,
+            "total": 94.0,
+            "max_marks": null
+          },
+          "INFORMATION TECHNOLOGY": {
+            "theory": 45.0,
+            "practical": 49.0,
+            "total": 94.0,
+            "max_marks": null
+          }
+        },
+        "total_marks_obtained": 537.0,
+        "total_max_marks": null,
+        "percentage": null,
+        "result": "PASS",
+        "extra_details": {
+          "date_of_issue": "15-07-2020",
+          "serial_number": "1752901"
+        }
+      }
+    ],
+    "class_12": [
+      {
+        "document_id": "cand002_CLASS_12",
+        "document_type": "12th_marksheet",
+        "source_file": "CLASS_12.pdf",
+        "name": "FARAZ KHAN",
+        "dob": "04-11-2020",
+        "father_name": "MOHD SAJID KHAN",
+        "mother_name": "GAZALA PARVEEN",
+        "gender": null,
+        "roll_no": "21663624",
+        "registration_no": "N222/60291/0014",
+        "serial_no": null,
+        "board": "CENTRAL BOARD OF SECONDARY EDUCATION",
+        "school": "SUN VALLEY INTNL SCH VAISHALI GHAZIABAD UP",
+        "institution_code": "60291",
+        "stream": null,
+        "academic_year": null,
+        "passing_year": 2022,
+        "address": null,
+        "city": null,
+        "district": null,
+        "state": null,
+        "pincode": null,
+        "marks": {
+          "ENGLISH CORE": {
+            "theory": 72.0,
+            "practical": 20.0,
+            "total": 92.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "PHYSICS": {
+            "theory": 57.0,
+            "practical": 29.0,
+            "total": 86.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "CHEMISTRY": {
+            "theory": 60.0,
+            "practical": 28.0,
+            "total": 88.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "MATHEMATICS": {
+            "theory": 62.0,
+            "practical": 17.0,
+            "total": 79.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "COMPUTER SCIENCE (NEW)": {
+            "theory": 62.0,
+            "practical": 28.0,
+            "total": 90.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "PHYSICAL EDUCATION": {
+            "theory": 63.0,
+            "practical": 28.0,
+            "total": 91.0,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "WORK EXPERIENCE": {
+            "theory": null,
+            "practical": null,
+            "total": null,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "HEALTH & PHYSICAL EDUCATION": {
+            "theory": null,
+            "practical": null,
+            "total": null,
+            "max_marks": null,
+            "subject_type": null
+          },
+          "GENERAL STUDIES": {
+            "theory": null,
+            "practical": null,
+            "total": null,
+            "max_marks": null,
+            "subject_type": null
+          }
+        },
+        "total_marks_obtained": null,
+        "total_max_marks": null,
+        "percentage": null,
+        "result": "PASS",
+        "extra_details": {
+          "exam_name": "SENIOR SCHOOL CERTIFICATE EXAMINATION, 2022",
+          "date_of_issue": "22-07-2022",
+          "place_of_issue": "Delhi"
+        }
+      }
+    ],
+    "college": [
+      {
+        "document_id": "cand002_4",
+        "document_type": "college_marksheet",
+        "source_file": "4.pdf",
+        "name": "FARAZ KHAN / फराज खान",
+        "dob": null,
+        "father_name": "MOHD SAJID KHAN",
+        "mother_name": "GAZALA PARVEEN",
+        "gender": "Male",
+        "roll_no": "2301331530072",
+        "registration_no": null,
+        "enrollment_no": "230133153034613",
+        "serial_no": null,
+        "college": "NOIDA INSTITUTE OF ENGG. & TECHNOLOGY, GREATER NOIDA, GAUTAM B D UDDH NAGAR (AN AUTONOMOUS INSTITUTE)",
+        "university": "Dr. A.P.J Abdul Kalam Technical University , Uttar Pradesh , Lucknow",
+        "institution_code": "(133)",
+        "course": "Bachelor of Technology.",
+        "course_code": "(04)",
+        "branch": "Computer Science and Engineering(Artificial Intelligence & Machine Learning)",
+        "branch_code": "(153)",
+        "exam_name": null,
+        "semester": 4,
+        "session": "2024-25 (JAN_JUN) (REGULAR)(EVEN) COP",
+        "academic_year": null,
+        "passing_year": null,
+        "marks": {
+          "Optimization and Numerical Techniques": {
+            "subject_code": "BAS0404",
+            "internal": 37.0,
+            "external": 87.0,
+            "total": 124.0,
+            "max_marks": 150.0,
+            "grade": "A",
+            "grade_points": null,
+            "credits": null
+          },
+          "Technical Communication": {
+            "subject_code": "BASL0401",
+            "internal": 49.0,
+            "external": 34.0,
+            "total": 83.0,
+            "max_marks": 100.0,
+            "grade": "A",
+            "grade_points": null,
+            "credits": null
+          },
+          "Data Structure and Algorithm- II": {
+            "subject_code": "BCSE0401",
+            "internal": 38.0,
+            "external": 56.0,
+            "total": 94.0,
+            "max_marks": 150.0,
+            "grade": "B",
+            "grade_points": null,
+            "credits": null
+          },
+          "Operating Systems": {
+            "subject_code": "BCSE0403",
+            "internal": 45.0,
+            "external": 24.0,
+            "total": 69.0,
+            "max_marks": 100.0,
+            "grade": "B",
+            "grade_points": null,
+            "credits": null
+          },
+          "Theory of Automata and Formal Languages": {
+            "subject_code": "BCSE0404",
+            "internal": 41.0,
+            "external": 75.0,
+            "total": 116.0,
+            "max_marks": 150.0,
+            "grade": "B+",
+            "grade_points": null,
+            "credits": null
+          }
+        },
+        "total_marks_obtained": null,
+        "total_max_marks": null,
+        "sgpa": null,
+        "cgpa": null,
+        "percentage": null,
+        "result": null,
+        "extra_details": {}
+      }
+    ]
+  }
+}
