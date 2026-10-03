@@ -15,9 +15,9 @@ from classification.document_classifier import classify_document,classify_image
 from extraction.pdf_converter import convert_pdf_to_images
 from extraction.vision_extractor import extract_from_image
 from derivation.rule_engine import compute_derived_fields, load_rules
-from identity.resolver import resolve_candidate_identity
-from verification.consistency_checker import run_consistency_check
-from report.report_generator import generate_candidate_report
+
+from verification.update_percentages import update_records
+
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -185,7 +185,11 @@ def process_candidate(candidate: dict, rules: dict):
         print("  No usable documents for this candidate.")
         return
 
+    # Update percentages before building JSON
+    update_records(records)
+
     # Build final candidate JSON
+    from verification.consistency_checker import evaluate_overall_identity
     candidate_output = {
         "candidate_id": candidate_id,
         "documents": {
@@ -193,6 +197,7 @@ def process_candidate(candidate: dict, rules: dict):
             "class_12": records["class_12"],
             "college": records["college"],
         },
+        "identity_confidence_score": evaluate_overall_identity(records)
     }
 
     # Save JSON
@@ -210,48 +215,7 @@ def process_candidate(candidate: dict, rules: dict):
 
     print(f"\n  JSON saved: {output_path}")
 
-    '''
-    if not records:
-        print("  No usable documents for this candidate. Skipping report.")
-        return
 
-    # ================================================================
-    # DERIVED FIELDS
-    # ================================================================
-
-    derived_by_doc = {}
-
-    for doc_group in ("class_10","class_12","college",):
-        for record in records[doc_group]:
-            derived = compute_derived_fields(record,rules)
-            derived_by_doc.setdefault(doc_group,[]).append(derived)
-            for field_name, info in derived.items():
-                if info["value"] is not None:
-                    record[field_name] = info["value"]
-
-
-    # IDENTITY RESOLUTION
-    identity_results = resolve_candidate_identity(records)
-
-    #CONSISTENCY CHECK
-    consistency_results = run_consistency_check(records,identity_results)
-
-    #REPORT
-    REPORTS_FOLDER.mkdir(parents=True,exist_ok=True)
-
-    output_path = (REPORTS_FOLDER/ f"{candidate_id}_report.pdf")
-
-    generate_candidate_report(
-        candidate_id=candidate_id,
-        records=records,
-        derived_by_doc=derived_by_doc,
-        consistency_results=consistency_results,
-        identity_results=identity_results,
-        output_path=output_path,
-    )
-
-    print(f"  Report generated: {output_path}")
-    '''
 
 
 def main():
@@ -265,7 +229,7 @@ def main():
     for candidate in candidates:
         process_candidate(candidate, rules)
 
-    print("\nAll candidates processed. Reports are in the 'reports/' folder.")
+    print("\nAll candidates processed.")
 
 
 if __name__ == "__main__":
