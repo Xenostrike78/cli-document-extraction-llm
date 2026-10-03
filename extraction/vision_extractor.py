@@ -69,6 +69,7 @@ def extract_from_image(image_path, document_type):
             }
         ],
         response_format={"type": "json_object"},
+        reasoning_effort='medium',
         temperature=0,
         max_tokens=900
     )
@@ -97,15 +98,3 @@ def extract_from_image(image_path, document_type):
 
     return validated.model_dump()
 
-# def extract_from_pdf(pdf_path, document_type, output_dir):
-#     image_paths = convert_pdf_to_images(pdf_path, output_dir)
-#     page_results = []
-#     for page_number, image_path in enumerate(image_paths, start=1):
-#         print(f"    Sending page {page_number} to Groq...\n\n")
-#         result = extract_from_image(image_path, document_type)
-#         page_results.append({
-#             "page": page_number,
-#             "image": str(image_path),
-#             "data": result
-#         })
-#     return page_results

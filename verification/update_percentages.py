@@ -1,6 +1,3 @@
-import json
-import os
-import glob
 
 def calculate_percentage(marks, is_college=False):
     if not marks:
@@ -44,24 +41,3 @@ def update_records(records):
                     doc["percentage"] = perc
                     if is_college:
                         doc["cgpa"] = round(perc / 10, 2) if not (perc / 10).is_integer() else float(perc / 10)
-
-def process_file(filepath):
-    with open(filepath, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        
-    modified = False
-    
-    if "documents" in data:
-        # Instead of duplicating, we can just call our new function
-        # Data["documents"] has the same structure as `records`
-        update_records(data["documents"])
-        modified = True
-
-    if modified:
-        with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-            
-if __name__ == "__main__":
-    search_path = os.path.join(r"d:\NIC\docAI\output", "*.json")
-    for filepath in glob.glob(search_path):
-        process_file(filepath)

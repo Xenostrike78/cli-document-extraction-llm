@@ -1,0 +1,262 @@
+{
+  "candidate_id": "cand003",
+  "documents": {
+    "class_10": [
+      {
+        "document_id": "cand003_10th marksheet",
+        "document_type": "10th_marksheet",
+        "source_file": "10th marksheet.pdf",
+        "name": "MOHD SAQIB",
+        "dob": "02-04-2004",
+        "father_name": "MOHD AHSAN",
+        "mother_name": "ASMA KAUSAR",
+        "gender": "MALE",
+        "roll_no": "0679459",
+        "registration_no": null,
+        "serial_no": "2423050",
+        "board": "Uttar Pradesh Madhyamik Shiksha Parishad",
+        "school": "M D S INTER COLLEGE NAJIBABAD BIJNOR",
+        "institution_code": "23/14123/1044",
+        "academic_year": "2020",
+        "passing_year": 2020,
+        "address": null,
+        "city": "Prayagraj",
+        "district": null,
+        "state": "Uttar Pradesh",
+        "pincode": null,
+        "marks": {
+          "HINDI": {
+            "theory": 51.0,
+            "practical": 29.0,
+            "total": 80.0,
+            "max_marks": 100.0
+          },
+          "ENGLISH": {
+            "theory": 52.0,
+            "practical": 29.0,
+            "total": 81.0,
+            "max_marks": 100.0
+          },
+          "MATHEMATICS": {
+            "theory": 60.0,
+            "practical": 30.0,
+            "total": 90.0,
+            "max_marks": 100.0
+          },
+          "SCIENCE": {
+            "theory": 62.0,
+            "practical": 28.0,
+            "total": 90.0,
+            "max_marks": 100.0
+          },
+          "SOCIAL SCIENCE": {
+            "theory": 41.0,
+            "practical": 29.0,
+            "total": 70.0,
+            "max_marks": 100.0
+          },
+          "COMPUTER": {
+            "theory": 50.0,
+            "practical": 38.0,
+            "total": 88.0,
+            "max_marks": 100.0
+          }
+        },
+        "total_marks_obtained": 499.0,
+        "total_max_marks": 600.0,
+        "percentage": 83.17,
+        "result": "PASSED",
+        "extra_details": {
+          "certificate_no": "23007172",
+          "exam_type": "FULL EXAM",
+          "category_of_moral_yoga_sports_and_physical_education": "A",
+          "date_of_issue": "27TH JUNE 2020",
+          "place_of_issue": "Prayagraj, Uttar Pradesh"
+        },
+        "final_name": "mohammad saqib"
+      }
+    ],
+    "class_12": [
+      {
+        "document_id": "cand003_12th marksheet",
+        "document_type": "12th_marksheet",
+        "source_file": "12th marksheet.pdf",
+        "name": "MOHD SAQIB",
+        "dob": "23/0223/10",
+        "father_name": "MOHD AHSAN",
+        "mother_name": "ASMA KAUSAR",
+        "gender": null,
+        "roll_no": "2235521532",
+        "registration_no": null,
+        "serial_no": "23005703",
+        "board": "Uttar Pradesh School and Intermediate Education Board",
+        "school": "M D S INTER COLLEGE NAJIBABAD BIJNOR",
+        "institution_code": null,
+        "stream": null,
+        "academic_year": "2022",
+        "passing_year": 2022,
+        "address": null,
+        "city": "Prayagraj",
+        "district": null,
+        "state": "Uttar Pradesh",
+        "pincode": null,
+        "marks": {
+          "GENERAL HINDI": {
+            "theory": null,
+            "practical": null,
+            "total": 73.0,
+            "max_marks": 100.0,
+            "subject_type": null
+          },
+          "ENGLISH": {
+            "theory": null,
+            "practical": null,
+            "total": 69.0,
+            "max_marks": 100.0,
+            "subject_type": null
+          },
+          "MATHEMATICS": {
+            "theory": null,
+            "practical": null,
+            "total": 59.0,
+            "max_marks": 100.0,
+            "subject_type": null
+          },
+          "PHYSICS": {
+            "theory": null,
+            "practical": null,
+            "total": 79.0,
+            "max_marks": 100.0,
+            "subject_type": null
+          },
+          "CHEMISTRY": {
+            "theory": null,
+            "practical": null,
+            "total": 79.0,
+            "max_marks": 100.0,
+            "subject_type": null
+          },
+          "MORAL Y.S&P.EDU": {
+            "theory": null,
+            "practical": null,
+            "total": 40.0,
+            "max_marks": 100.0,
+            "subject_type": null
+          }
+        },
+        "total_marks_obtained": 359.0,
+        "total_max_marks": 500.0,
+        "percentage": 66.5,
+        "result": "PASSED",
+        "extra_details": {
+          "exam_type": "FULL EXAM",
+          "subject_group": "B-SCIENCE",
+          "division": "FIRST",
+          "date_of_issue": "18TH JUNE'2022",
+          "place_of_issue": "Prayagraj, Uttar Pradesh",
+          "secretary_name": "Dibyankt Shukla"
+        },
+        "final_name": "mohammad saqib"
+      }
+    ],
+    "college": [
+      {
+        "document_id": "cand003_VI",
+        "document_type": "college_marksheet",
+        "source_file": "VI.pdf",
+        "name": "MOHD SAQIB",
+        "dob": null,
+        "father_name": "MOHD AHSAN",
+        "mother_name": "ASMA KAUSAR",
+        "gender": "Male",
+        "roll_no": "2301331530095",
+        "registration_no": null,
+        "enrollment_no": "23013315305641",
+        "serial_no": null,
+        "college": "NOIDA INSTITUTE OF ENGG. & TECHNOLOGY, GREATER NOIDA",
+        "university": "Dr. A.P.J Abdul Kalam Technical University, Uttar Pradesh",
+        "institution_code": "133",
+        "course": "Bachelor of Technology",
+        "course_code": "04",
+        "branch": "Computer Science And Engineering(Artificial Intelligence & Machine Learning)",
+        "branch_code": "153",
+        "exam_name": "REGULAR(EVEN)",
+        "semester": 6,
+        "session": "2025-26 (JAN_JUNE)",
+        "academic_year": "2025-26",
+        "passing_year": null,
+        "marks": {
+          "Natural Language Processing": {
+            "subject_code": "BCSAI0601",
+            "internal": 42.0,
+            "external": 85.0,
+            "total": 127.0,
+            "max_marks": 150.0,
+            "grade": "A",
+            "grade_points": null,
+            "credits": null
+          },
+          "Advanced Java Programming": {
+            "subject_code": "BCSAI0612",
+            "internal": 45.0,
+            "external": 75.0,
+            "total": 120.0,
+            "max_marks": 150.0,
+            "grade": "A",
+            "grade_points": null,
+            "credits": null
+          },
+          "Web Development using MEAN Stack": {
+            "subject_code": "BCSE0614",
+            "internal": 43.0,
+            "external": 83.0,
+            "total": 126.0,
+            "max_marks": 150.0,
+            "grade": "A",
+            "grade_points": null,
+            "credits": null
+          },
+          "Soft Skills & Personality Development": {
+            "subject_code": "BOE0665",
+            "internal": 37.0,
+            "external": 80.0,
+            "total": 117.0,
+            "max_marks": 150.0,
+            "grade": "B+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Natural Language Processing Lab": {
+            "subject_code": "BCSAI0651",
+            "internal": 24.0,
+            "external": 24.0,
+            "total": 48.0,
+            "max_marks": 50.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Generative AI": {
+            "subject_code": "BCSAI0652",
+            "internal": 46.0,
+            "external": 91.0,
+            "total": 137.0,
+            "max_marks": 150.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          }
+        },
+        "total_marks_obtained": null,
+        "total_max_marks": null,
+        "sgpa": null,
+        "cgpa": 8.44,
+        "percentage": 84.38,
+        "result": null,
+        "extra_details": {},
+        "final_name": "mohammad saqib"
+      }
+    ]
+  },
+  "identity_confidence_score": 1.0
+}

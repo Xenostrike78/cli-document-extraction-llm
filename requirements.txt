@@ -10,3 +10,4 @@ unidecode
 reportlab
 scikit-learn
 openai
+django

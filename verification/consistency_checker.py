@@ -2,46 +2,8 @@
 Cross-Document Consistency Check.
 """
 
-from typing import Dict, List, Optional
-
-# Name convention knowledge base
+from typing import Dict,Optional
 from identity.names_variant import NAME_VARIANT_KB
-
-
-def _normalize_id(value):
-
-    if value is None:
-        return None
-
-    return (
-        str(value)
-        .strip()
-        .lower()
-        .replace(" ", "")
-        .replace("-", "")
-    )
-
-
-def _normalize_name_for_identity(value):
-
-    if not value:
-        return None
-
-    val_str = str(value).strip().lower()
-
-    if "/" in val_str:
-        val_str = val_str.split("/")[0].strip()
-
-    return (
-        val_str
-        .replace(" ", "")
-        .replace("-", "")
-    )
-
-
-# ============================================================
-# NAME CONVENTION / CANONICAL NAME
-# ============================================================
 
 def _normalize_name_token(value: str) -> str:
     """
@@ -51,13 +13,7 @@ def _normalize_name_token(value: str) -> str:
     if not value:
         return ""
 
-    return (
-        str(value)
-        .strip()
-        .lower()
-        .replace(".", "")
-        .replace(",", "")
-    )
+    return (str(value).strip().lower().replace(".", "").replace(",", ""))
 
 
 def _build_name_variant_lookup():
@@ -96,7 +52,6 @@ def _build_name_variant_lookup():
 
 
 NAME_VARIANT_LOOKUP = _build_name_variant_lookup()
-
 
 def generate_final_name(name: Optional[str]) -> Optional[str]:
     """
@@ -154,14 +109,8 @@ def generate_final_name(name: Optional[str]) -> Optional[str]:
 
     return " ".join(canonical_tokens)
 
-
-# ============================================================
 # IDENTITY CONFIDENCE SCORE
-# ============================================================
-
-def evaluate_overall_identity(
-    records_dict: Dict[str, list]
-) -> float:
+def evaluate_overall_identity(records_dict: Dict[str, list]) -> float:
 
     """
     Calculates an identity confidence score using ONLY:
@@ -183,7 +132,6 @@ def evaluate_overall_identity(
     Missing fields are ignored and do not reduce the score.
     """
 
-    import difflib
 
     # ---------------------------------------------------------
     # 1. Flatten all documents
@@ -335,143 +283,3 @@ def evaluate_overall_identity(
         ),
         4
     )
-
-
-# ============================================================
-# PATCH EXISTING JSON FILES
-# ============================================================
-
-def patch_existing_jsons():
-
-    """
-    Updates existing JSON files in the output/ directory.
-
-    Adds:
-
-        identity_confidence_score
-
-    And for every document:
-
-        final_name
-
-    The original 'name' field is preserved.
-    """
-
-    import glob
-    import json
-    import os
-
-    output_dir = os.path.join(
-        os.path.dirname(
-            os.path.dirname(__file__)
-        ),
-        "output"
-    )
-
-    search_path = os.path.join(
-        output_dir,
-        "*.json"
-    )
-
-    for f in glob.glob(search_path):
-
-        with open(
-            f,
-            "r",
-            encoding="utf-8"
-        ) as file:
-
-            data = json.load(file)
-
-        if "documents" in data:
-
-            # -------------------------------------------------
-            # 1. Generate final_name for every document
-            # -------------------------------------------------
-
-            documents = data["documents"]
-
-            if isinstance(documents, dict):
-
-                for doc_key, doc_data in documents.items():
-
-                    if isinstance(doc_data, list):
-
-                        for record in doc_data:
-
-                            if isinstance(record, dict):
-
-                                original_name = record.get(
-                                    "name"
-                                )
-
-                                record["final_name"] = (
-                                    generate_final_name(
-                                        original_name
-                                    )
-                                )
-
-                    elif isinstance(doc_data, dict):
-
-                        original_name = doc_data.get(
-                            "name"
-                        )
-
-                        doc_data["final_name"] = (
-                            generate_final_name(
-                                original_name
-                            )
-                        )
-
-            # -------------------------------------------------
-            # 2. Remove old same_person field
-            # -------------------------------------------------
-
-            if "same_person" in data:
-                del data["same_person"]
-
-            # -------------------------------------------------
-            # 3. Calculate identity confidence
-            # -------------------------------------------------
-
-            data["identity_confidence_score"] = (
-                evaluate_overall_identity(
-                    data["documents"]
-                )
-            )
-
-            # -------------------------------------------------
-            # 4. Save JSON
-            # -------------------------------------------------
-
-            with open(
-                f,
-                "w",
-                encoding="utf-8"
-            ) as file:
-
-                json.dump(
-                    data,
-                    file,
-                    indent=2,
-                    ensure_ascii=False
-                )
-
-    print("Patching completed.")
-
-
-if __name__ == "__main__":
-
-    import sys
-    import os
-
-    # Add project root to Python path
-    sys.path.append(
-        os.path.dirname(
-            os.path.dirname(
-                os.path.abspath(__file__)
-            )
-        )
-    )
-
-    patch_existing_jsons()

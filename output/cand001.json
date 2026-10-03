@@ -3,74 +3,73 @@
   "documents": {
     "class_10": [
       {
-        "document_id": "cand001_CLASS_10",
+        "document_id": "cand001_10",
         "document_type": "10th_marksheet",
-        "source_file": "CLASS_10.pdf",
-        "name": "FARAZ KHAN",
-        "dob": "10-07-2004",
-        "father_name": "MOHD SAJID KHAN",
-        "mother_name": "GAZALA PARVEEN",
+        "source_file": "10.pdf",
+        "name": "MOHD ARBAZ KHAN",
+        "dob": "01-04-2004",
+        "father_name": "SAGHEER KHAN",
+        "mother_name": "SHIMMI KHAN",
         "gender": null,
-        "roll_no": "21175457",
-        "registration_no": "U120/54110/0159",
-        "serial_no": null,
+        "roll_no": "25163040",
+        "registration_no": "U121/81198/0088",
+        "serial_no": "SS ET 2021/1",
         "board": "CENTRAL BOARD OF SECONDARY EDUCATION",
-        "school": "SUN VALLEY INTNL SCH VAISHALI GHAZIABAD UP",
-        "institution_code": "60291",
+        "school": "81198 - DELHI PUB GLOBAL SCH SIHORA GOVIND MORADABAD UP",
+        "institution_code": "81198",
         "academic_year": null,
-        "passing_year": 2020,
+        "passing_year": 2021,
         "address": null,
         "city": "Delhi",
         "district": null,
         "state": null,
         "pincode": null,
         "marks": {
-          "ENGLISH LANG & LIT.": {
-            "theory": 80.0,
+          "ENGLISH LNG & LIT.": {
+            "theory": 72.0,
             "practical": 20.0,
-            "total": 100.0,
+            "total": 92.0,
             "max_marks": null
           },
-          "HINDI COURSE-B": {
-            "theory": 73.0,
-            "practical": 18.0,
-            "total": 91.0,
-            "max_marks": null
-          },
-          "MATHEMATICS STANDARD": {
+          "HINDI COURSE-A": {
             "theory": 64.0,
             "practical": 18.0,
             "total": 82.0,
             "max_marks": null
           },
+          "MATHEMATICS STANDARD": {
+            "theory": 62.0,
+            "practical": 19.0,
+            "total": 81.0,
+            "max_marks": null
+          },
           "SCIENCE": {
-            "theory": 58.0,
-            "practical": 18.0,
-            "total": 76.0,
+            "theory": 56.0,
+            "practical": 19.0,
+            "total": 75.0,
             "max_marks": null
           },
           "SOCIAL SCIENCE": {
-            "theory": 75.0,
-            "practical": 19.0,
-            "total": 94.0,
+            "theory": 57.0,
+            "practical": 20.0,
+            "total": 77.0,
             "max_marks": null
           },
-          "INFORMATION TECHNOLOGY": {
-            "theory": 45.0,
-            "practical": 49.0,
-            "total": 94.0,
+          "COMPUTER APPLICATIONS": {
+            "theory": 41.0,
+            "practical": 50.0,
+            "total": 91.0,
             "max_marks": null
           }
         },
-        "total_marks_obtained": 537.0,
+        "total_marks_obtained": null,
         "total_max_marks": null,
-        "percentage": 89.5,
+        "percentage": 83.0,
         "result": "PASS",
         "extra_details": {
-          "date_of_issue": "15-07-2020",
-          "serial_number": "1752901"
+          "date_of_issue": "03-08-2021"
         },
-        "final_name": "faraz khan"
+        "final_name": "mohammad arbaz khan"
       }
     ],
     "class_12": [
@@ -263,5 +262,5 @@
       }
     ]
   },
-  "identity_confidence_score": 0.4583
+  "identity_confidence_score": 1.0
 }

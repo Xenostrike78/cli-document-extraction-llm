@@ -9,22 +9,19 @@ Run: python main.py
 """
 
 from pathlib import Path
-import json,os
+import json
 from ingestion.folder_walker import walk_candidates
-from classification.document_classifier import classify_document,classify_image
+from classification.document_classifier import classify_image
 from extraction.pdf_converter import convert_pdf_to_images
 from extraction.vision_extractor import extract_from_image
-from derivation.rule_engine import compute_derived_fields, load_rules
-
 from verification.update_percentages import update_records
-
+from verification.consistency_checker import evaluate_overall_identity,generate_final_name
 
 BASE_DIR = Path(__file__).resolve().parent
 
 ROOT_FOLDER = BASE_DIR / "NIC"
 CONVERTED_FOLDER = BASE_DIR / "converted_images"
 OUTPUT_FOLDER = BASE_DIR / "output"
-REPORTS_FOLDER = BASE_DIR / "reports"
 
 IMAGE_EXTENSIONS = {".jpg",".jpeg",".png"}
 
@@ -125,10 +122,7 @@ def extract_candidate_records(candidate: dict) -> dict:
             print(f"  Extracting first page: {first_page.name}...")
             record = extract_from_image(first_page,document_type)
             
-            record["document_id"] = (
-                f"{candidate_id}_{file_path.stem}"
-            )
-
+            record["document_id"] = f"{candidate_id}_{file_path.stem}"
             record["source_file"] = file_path.name
 
             # ========================================================
@@ -148,18 +142,10 @@ def extract_candidate_records(candidate: dict) -> dict:
         except Exception as exc:
             print(f"    Extraction failed for {file_path.name}: {exc}")
             continue
-
-        # if record is None:
-        #     continue
-
-        # if document_type in records:
-        #     print(f"    Note: multiple files classified as '{document_type}' -- using latest")
-        # records[document_type] = record
-
     return records
 
 
-def process_candidate(candidate: dict, rules: dict):
+def process_candidate(candidate: dict):
     candidate_id = candidate["candidate_id"]
     print("\n" + "=" * 70)
     print(f"Candidate: {candidate_id}")
@@ -167,17 +153,6 @@ def process_candidate(candidate: dict, rules: dict):
 
     records = extract_candidate_records(candidate)
 
-
-    # ================================================================
-    # SELF REPORTED DATA
-    # ================================================================
-
-    # self_reported = candidate.get("self_reported") or {}
-    # if self_reported:
-        # records["self_reported"] = self_reported
-    # else:
-        # print("  No self_reported.json found -- self-reported fields will show as MISSING.")
-    
     # Check whether there is anything useful
     documents_found = (records["class_10"] or records["class_12"] or records["college"])
 
@@ -188,8 +163,13 @@ def process_candidate(candidate: dict, rules: dict):
     # Update percentages before building JSON
     update_records(records)
 
+    for doc_group in ("class_10", "class_12", "college"):
+        for record in records[doc_group]:
+            record["final_name"] = generate_final_name(
+                record.get("name")
+            )
+    
     # Build final candidate JSON
-    from verification.consistency_checker import evaluate_overall_identity
     candidate_output = {
         "candidate_id": candidate_id,
         "documents": {
@@ -206,12 +186,7 @@ def process_candidate(candidate: dict, rules: dict):
     output_path = OUTPUT_FOLDER / f"{candidate_id}.json"
 
     with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(
-            candidate_output,
-            f,
-            indent=2,
-            ensure_ascii=False,
-        )
+        json.dump(candidate_output,f,indent=2,ensure_ascii=False)
 
     print(f"\n  JSON saved: {output_path}")
 
@@ -219,7 +194,6 @@ def process_candidate(candidate: dict, rules: dict):
 
 
 def main():
-    rules = load_rules()
     candidates = walk_candidates(ROOT_FOLDER)
 
     if not candidates:
@@ -227,7 +201,7 @@ def main():
         return
 
     for candidate in candidates:
-        process_candidate(candidate, rules)
+        process_candidate(candidate)
 
     print("\nAll candidates processed.")
 

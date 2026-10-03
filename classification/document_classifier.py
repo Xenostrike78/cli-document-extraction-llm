@@ -1,13 +1,15 @@
 import base64
-import json,os,re
+import json,os
 from pathlib import Path
 from openai import OpenAI
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
-
-OPEN_MODEL = "dots-studio/dots-3-note-preview:free"
+'''
+# OPEN_MODEL = "qwen/qwen3.8-27b:free"
+OPEN_MODEL = "google/gemma-4-31b-it:free"
 openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
 
 if not openrouter_api_key:
@@ -18,35 +20,15 @@ open_client = OpenAI(
     api_key=openrouter_api_key,
 )
 
-# old
-DOCUMENT_PATTERNS = {
-    "10th_marksheet": [
-        r"\b10(th)?\b", r"\bclass[-_ ]?10\b", r"\bmatric\b",
-        r"\bsecondary\b", r"\bhigh[-_ ]?school\b"
-    ],
-    "12th_marksheet": [
-        r"\b12(th)?\b", r"\bclass[-_ ]?12\b", r"\bintermediate\b",
-        r"\bhigher[-_ ]?secondary\b"
-    ],
-    "college_marksheet": [
-        r"\bcollege\b", r"\buniversity\b", r"\bdegree\b",
-        r"\bgraduation\b", r"\bsemester\b", r"\bsem[-_ ]?\d+\b",
-        r"\bbtech\b", r"\bmtech\b", r"\bbca\b", r"\bmca\b"
-    ]
-}
+'''
+api_key_2 = os.getenv("GROQ_API_KEY_2")
 
-# old
-def classify_by_filename(file_path):
-    name = Path(file_path).stem.lower().replace("-", " ").replace("_", " ")
-    for doc_type, patterns in DOCUMENT_PATTERNS.items():
-        if any(re.search(pattern, name, re.IGNORECASE) for pattern in patterns):
-            return doc_type
-    return "unknown"
+if not api_key_2:
+    raise RuntimeError("GROQ_API_KEY is not set. Add it to your .env file.")
 
-# old
-def classify_document(file_path):
-    return classify_by_filename(file_path)
-
+client = Groq(api_key=api_key_2)
+MODEL = "qwen/qwen3.8-27b"
+# '''
 
 def classify_image(image_path: Path) -> str:
     """
@@ -116,8 +98,10 @@ The value of "document_type" MUST be exactly one of:
 "unknown"
 """
 
-    response = open_client.chat.completions.create(
-        model=OPEN_MODEL,
+    # response = open_client.chat.completions.create(
+    #     model=OPEN_MODEL,
+    response = client.chat.completions.create(
+        model=MODEL,
         messages=[
             {
                 "role": "system",
@@ -149,7 +133,9 @@ The value of "document_type" MUST be exactly one of:
         response_format={
             "type": "json_object"
         },
+        reasoning_effort='low',
         temperature=0,
+        max_tokens=150
     )
 
     content = response.choices[0].message.content
