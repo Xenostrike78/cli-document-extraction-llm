@@ -1,13 +1,5 @@
 PyMuPDF
-python-docx
-opencv-python
-numpy
 groq
 python-dotenv
 pydantic
-rapidfuzz
-unidecode
-reportlab
-scikit-learn
 openai
-django
