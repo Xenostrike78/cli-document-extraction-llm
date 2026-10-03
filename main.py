@@ -19,7 +19,7 @@ from verification.consistency_checker import evaluate_overall_identity,generate_
 
 BASE_DIR = Path(__file__).resolve().parent
 
-ROOT_FOLDER = BASE_DIR / "NIC"
+ROOT_FOLDER = BASE_DIR / "documents "
 CONVERTED_FOLDER = BASE_DIR / "converted_images"
 OUTPUT_FOLDER = BASE_DIR / "output"
 

@@ -1,4 +1,5 @@
-# NIC Document AI System
+# cli-document-extraction-LLM
+
 
 A Python-based document-processing pipeline for Indian academic documents. The current pipeline scans candidate folders, converts the first page of PDFs to JPG, classifies the document with a vision model, extracts structured data with a document-type-specific prompt, validates the result with Pydantic, calculates derived percentage/CGPA values, generates a canonical name, evaluates cross-document identity confidence, and saves one JSON file per candidate.
 
@@ -47,10 +48,10 @@ output/<candidate_id>.json
 
 ## Input Structure
 
-Candidates are organized as folders under `NIC/`:
+Candidates are organized as folders under `documents/`:
 
 ```text
-NIC/
+documents/
 ├── cand001/
 │   ├── 10.pdf
 │   ├── 12.pdf
@@ -263,7 +264,7 @@ Use the variable names exactly as shown. Extra variables such as `MINE_GROQ_API_
 
 ## Run
 
-Place candidate folders under `NIC/` and run:
+Place candidate folders under `documents/` and run:
 
 ```bash
 python main.py
@@ -274,7 +275,7 @@ The current entry point is CLI-based. The active processing pipeline does not st
 ## Project Structure
 
 ```text
-NIC_Document_AI/
+document-extraction-llm/
 │
 ├── main.py
 │
@@ -299,7 +300,7 @@ NIC_Document_AI/
 │   ├── consistency_checker.py
 │   └── update_percentages.py
 │
-├── NIC/
+├── documents/
 │   └── <candidate folders>
 │
 ├── converted_images/
