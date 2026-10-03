@@ -240,14 +240,26 @@ Create a virtual environment and install dependencies:
 pip install -r requirements.txt
 ```
 
-The current code expects these environment variables:
+### Environment Variables
 
-```text
-GROQ_API_KEY=your_extraction_key
-GROQ_API_KEY_2=your_classification_key
+Create a `.env` file in the project root, at the same level as `main.py`.
+The current active code uses **two Groq API keys**:
+
+```env
+GROQ_API_KEY=your_groq_extraction_api_key
+GROQ_API_KEY_2=your_groq_classification_api_key
 ```
 
-Keep `.env` out of version control. It is already listed in `.gitignore`.
+Key usage:
+
+| Variable | Used by | Purpose |
+|---|---|---|
+| `GROQ_API_KEY` | `extraction/vision_extractor.py` | Qwen 3.8 27B document extraction |
+| `GROQ_API_KEY_2` | `classification/document_classifier.py` | Qwen 3.8 27B document classification |
+
+Keep the actual API keys private. Do not commit `.env` to Git. The `.env` file is already excluded by `.gitignore`.
+
+Use the variable names exactly as shown. Extra variables such as `MINE_GROQ_API_KEY`, `MINE_GROQ_API_KEY_2`, or inactive OpenRouter settings are not required by the current active pipeline.
 
 ## Run
 
