@@ -19,11 +19,29 @@ from verification.consistency_checker import evaluate_overall_identity,generate_
 
 BASE_DIR = Path(__file__).resolve().parent
 
-ROOT_FOLDER = BASE_DIR / "documents "
+ROOT_FOLDER = BASE_DIR / "documents"
 CONVERTED_FOLDER = BASE_DIR / "converted_images"
 OUTPUT_FOLDER = BASE_DIR / "output"
+CACHE_FOLDER = OUTPUT_FOLDER / "_cache"   # per-document results, so reruns do not spend API tokens
 
 IMAGE_EXTENSIONS = {".jpg",".jpeg",".png"}
+
+def _fingerprint(path: Path) -> str:
+    stat = path.stat()
+    return f"{stat.st_size}-{int(stat.st_mtime)}"
+
+
+def _cache_path(candidate_id: str, file_path: Path) -> Path:
+    return CACHE_FOLDER / candidate_id / f"{file_path.stem}.json"
+
+
+def _bucket_for(document_type: str):
+    return {
+        "10th_marksheet": "class_10",
+        "12th_marksheet": "class_12",
+        "college_marksheet": "college",
+    }.get(document_type)
+
 
 def extract_candidate_records(candidate: dict) -> dict:
     """
@@ -67,16 +85,28 @@ def extract_candidate_records(candidate: dict) -> dict:
         suffix = file_path.suffix.lower()
         try:
             # ========================================================
+            # STEP 0: REUSE A PREVIOUS RESULT FOR THE SAME UNCHANGED FILE
+            # ========================================================
+            cache_file = _cache_path(candidate_id, file_path)
+            if cache_file.exists():
+                cached = json.loads(cache_file.read_text(encoding="utf-8"))
+                if cached.get("fingerprint") == _fingerprint(file_path):
+                    bucket = _bucket_for(cached["document_type"])
+                    if bucket:
+                        print(f"  Using cached result ({cached['document_type']}).")
+                        records[bucket].append(cached["record"])
+                        continue
+
+            # ========================================================
             # STEP 1: CONVERT PDF TO JPG
             # ========================================================
             if suffix == ".pdf":
-                # output_dir = (CONVERTED_FOLDER/ candidate_id/ file_path.stem)
-                output_dir = CONVERTED_FOLDER/ candidate_id
+                # One folder per document, so documents never share (or reuse) page images
+                output_dir = CONVERTED_FOLDER / candidate_id / file_path.stem
+                output_dir.mkdir(parents=True, exist_ok=True)
                 print("  PDF detected.")
                 print("  Converting PDF pages to JPG...")
-                
-                image_paths = convert_pdf_to_images(file_path,output_dir)
-                
+                image_paths = convert_pdf_to_images(file_path, output_dir)
                 if not image_paths:
                     print("  No pages generated. Skipping.")
                     continue
@@ -102,19 +132,18 @@ def extract_candidate_records(candidate: dict) -> dict:
                 continue
 
             
-            # IMAGE SAVED
+            # IMAGE SAVED (named by document type, inside the document's own folder)
             if suffix == ".pdf":
                 output_names = {
                     "10th_marksheet": "class10.jpg",
                     "12th_marksheet": "class12.jpg",
                     "college_marksheet": "cllg.jpg",
                 }
-                new_name = output_names[document_type]
-                final_image_path = (CONVERTED_FOLDER/ candidate_id/ new_name)
-                first_page.rename(final_image_path)
+                final_image_path = first_page.parent / output_names[document_type]
+                first_page.replace(final_image_path)   # replace() also overwrites on Windows
                 first_page = final_image_path
-                print(f"  Converted image saved as: "f"{first_page}")
-            
+                print(f"  Converted image saved as: {first_page}")
+
             # ========================================================
             # STEP 3: TYPE-SPECIFIC EXTRACTION
             # ========================================================
@@ -129,15 +158,24 @@ def extract_candidate_records(candidate: dict) -> dict:
             # STEP 6: STORE IN CORRECT DOCUMENT BUCKET
             # ========================================================
 
-            if document_type == "10th_marksheet":
-                records["class_10"].append(record)
-            elif document_type == "12th_marksheet":
-                records["class_12"].append(record)
-            elif document_type == "college_marksheet":
-                records["college"].append(record)
-            else:
-                print(f"  Unsupported classified type: "f"{document_type}")
+            bucket = _bucket_for(document_type)
+            if bucket is None:
+                print(f"  Unsupported classified type: {document_type}")
+                continue
+            records[bucket].append(record)
 
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(
+                json.dumps(
+                    {
+                        "fingerprint": _fingerprint(file_path),
+                        "document_type": document_type,
+                        "record": record,
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
 
         except Exception as exc:
             print(f"    Extraction failed for {file_path.name}: {exc}")
@@ -197,7 +235,7 @@ def main():
     candidates = walk_candidates(ROOT_FOLDER)
 
     if not candidates:
-        print("No candidate folders/documents found under 'NIC/'.")
+        print("No candidate folders/documents found under 'documents/'.")
         return
 
     for candidate in candidates:

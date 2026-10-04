@@ -85,17 +85,17 @@ Use ONLY information visibly present in the document.
 
 Do not classify based on the filename.
 
-Return ONLY valid JSON in exactly this format:
+Return ONLY ONE of these exact labels:
 
-{
-    "document_type": "10th_marksheet"
-}
+10th_marksheet
+12th_marksheet
+college_marksheet
+unknown
 
-The value of "document_type" MUST be exactly one of:
-"10th_marksheet",
-"12th_marksheet",
-"college_marksheet",
-"unknown"
+Do not return JSON.
+Do not add quotes.
+Do not add punctuation.
+Do not explain your answer.
 """
 
     # response = open_client.chat.completions.create(
@@ -106,9 +106,12 @@ The value of "document_type" MUST be exactly one of:
             {
                 "role": "system",
                 "content": (
-                    "You are a precise document classification system. "
-                    "Classify documents only from visible information. "
-                    "Never guess."
+                    "Classify the document into exactly one of these labels: "
+                    "10th_marksheet, 12th_marksheet, college_marksheet, unknown. "
+                    "Return only the label. No explanation."
+                    # "You are a precise document classification system. "
+                    # "Classify documents only from visible information. "
+                    # "Never guess."
                 ),
             },
             {
@@ -130,22 +133,22 @@ The value of "document_type" MUST be exactly one of:
                 ],
             },
         ],
-        response_format={
-            "type": "json_object"
-        },
+        # response_format={
+        #     "type": "json_object"
+        # },
         reasoning_effort='low',
         temperature=0,
         max_tokens=150
     )
 
     content = response.choices[0].message.content
-
     if not content:
         return "unknown"
 
     try:
-        result = json.loads(content)
-        document_type = result.get("document_type", "unknown")
+        # result = json.loads(content)
+        # document_type = result.get("document_type", "unknown")
+        document_type = content.strip()
 
         allowed_types = {
             "10th_marksheet",
@@ -155,9 +158,24 @@ The value of "document_type" MUST be exactly one of:
         }
 
         if document_type not in allowed_types:
+            print(f"  Unexpected classifier response: {repr(document_type)}")
             return "unknown"
 
         return document_type
 
-    except (json.JSONDecodeError, TypeError):
+    # except (json.JSONDecodeError, TypeError):
+    except (AttributeError, TypeError):
         return "unknown"
+
+
+#     Return ONLY valid JSON in exactly this format:
+
+# {
+#     "document_type": "10th_marksheet"
+# }
+
+# The value of "document_type" MUST be exactly one of:
+# "10th_marksheet",
+# "12th_marksheet",
+# "college_marksheet",
+# "unknown"

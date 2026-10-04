@@ -15,60 +15,59 @@
         "registration_no": "U120/54110/0159",
         "serial_no": null,
         "board": "CENTRAL BOARD OF SECONDARY EDUCATION",
-        "school": "SUN VALLEY INTNL SCH VAISHALI GHAZIABAD UP",
-        "institution_code": "60291",
-        "academic_year": null,
+        "school": "60291 - SUN VALLEY INTNL SCH VAISHALI GHAZIABAD UP",
+        "institution_code": null,
+        "academic_year": "10-07-2004",
         "passing_year": 2020,
         "address": null,
-        "city": "Delhi",
+        "city": null,
         "district": null,
         "state": null,
         "pincode": null,
         "marks": {
           "ENGLISH LANG & LIT.": {
-            "theory": 80.0,
-            "practical": 20.0,
+            "theory": null,
+            "practical": null,
             "total": 100.0,
-            "max_marks": null
+            "max_marks": 100.0
           },
           "HINDI COURSE-B": {
-            "theory": 73.0,
-            "practical": 18.0,
+            "theory": null,
+            "practical": null,
             "total": 91.0,
-            "max_marks": null
+            "max_marks": 100.0
           },
           "MATHEMATICS STANDARD": {
-            "theory": 64.0,
-            "practical": 18.0,
+            "theory": null,
+            "practical": null,
             "total": 82.0,
-            "max_marks": null
+            "max_marks": 100.0
           },
           "SCIENCE": {
-            "theory": 58.0,
-            "practical": 18.0,
+            "theory": null,
+            "practical": null,
             "total": 76.0,
-            "max_marks": null
+            "max_marks": 100.0
           },
           "SOCIAL SCIENCE": {
-            "theory": 75.0,
-            "practical": 19.0,
+            "theory": null,
+            "practical": null,
             "total": 94.0,
-            "max_marks": null
+            "max_marks": 100.0
           },
           "INFORMATION TECHNOLOGY": {
-            "theory": 45.0,
-            "practical": 49.0,
+            "theory": null,
+            "practical": null,
             "total": 94.0,
-            "max_marks": null
+            "max_marks": 100.0
           }
         },
-        "total_marks_obtained": 537.0,
-        "total_max_marks": null,
+        "total_marks_obtained": 402.0,
+        "total_max_marks": 500.0,
         "percentage": 89.5,
         "result": "PASS",
         "extra_details": {
-          "date_of_issue": "15-07-2020",
-          "serial_number": "1752901"
+          "Dated": "15-07-2020"
         },
         "final_name": "faraz khan"
       }
@@ -90,54 +89,54 @@
         "school": "SUN VALLEY INTNL SCH VAISHALI GHAZIABAD UP",
         "institution_code": "60291",
         "stream": null,
-        "academic_year": null,
-        "passing_year": 2022,
+        "academic_year": "2022",
+        "passing_year": null,
         "address": null,
-        "city": null,
-        "district": null,
-        "state": null,
+        "city": "Delhi",
+        "district": "GHAZIABAD",
+        "state": "UP",
         "pincode": null,
         "marks": {
           "ENGLISH CORE": {
-            "theory": 72.0,
-            "practical": 20.0,
+            "theory": null,
+            "practical": null,
             "total": 92.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "PHYSICS": {
-            "theory": 57.0,
-            "practical": 29.0,
+            "theory": null,
+            "practical": null,
             "total": 86.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "CHEMISTRY": {
-            "theory": 60.0,
-            "practical": 28.0,
+            "theory": null,
+            "practical": null,
             "total": 88.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "MATHEMATICS": {
-            "theory": 62.0,
-            "practical": 17.0,
+            "theory": null,
+            "practical": null,
             "total": 79.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "COMPUTER SCIENCE (NEW)": {
-            "theory": 62.0,
-            "practical": 28.0,
+            "theory": null,
+            "practical": null,
             "total": 90.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "PHYSICAL EDUCATION": {
-            "theory": 63.0,
-            "practical": 28.0,
+            "theory": null,
+            "practical": null,
             "total": 91.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "WORK EXPERIENCE": {
@@ -167,9 +166,7 @@
         "percentage": 87.67,
         "result": "PASS",
         "extra_details": {
-          "exam_name": "SENIOR SCHOOL CERTIFICATE EXAMINATION, 2022",
-          "date_of_issue": "22-07-2022",
-          "place_of_issue": "Delhi"
+          "date_of_issue": "22-07-2022"
         },
         "final_name": "faraz khan"
       }
@@ -179,7 +176,7 @@
         "document_id": "cand002_4",
         "document_type": "college_marksheet",
         "source_file": "4.pdf",
-        "name": "FARAZ KHAN / फराज खान",
+        "name": "FARAZ KHAN / फराज़ खान",
         "dob": null,
         "father_name": "MOHD SAJID KHAN",
         "mother_name": "GAZALA PARVEEN",
@@ -188,16 +185,16 @@
         "registration_no": null,
         "enrollment_no": "230133153034613",
         "serial_no": null,
-        "college": "NOIDA INSTITUTE OF ENGG. & TECHNOLOGY, GREATER NOIDA, GAUTAM B D UDDH NAGAR (AN AUTONOMOUS INSTITUTE)",
-        "university": "Dr. A.P.J Abdul Kalam Technical University , Uttar Pradesh , Lucknow",
-        "institution_code": "(133)",
-        "course": "Bachelor of Technology.",
-        "course_code": "(04)",
+        "college": "NOIDA INSTITUTE OF ENGINEERING & TECHNOLOGY, GREATER NOIDA",
+        "university": "Dr. A.P.J Abdul Kalam Technical University, Uttar Pradesh, Lucknow",
+        "institution_code": "133",
+        "course": "Bachelor of Technology",
+        "course_code": "04",
         "branch": "Computer Science and Engineering(Artificial Intelligence & Machine Learning)",
-        "branch_code": "(153)",
+        "branch_code": "153",
         "exam_name": null,
         "semester": 4,
-        "session": "2024-25 (JAN_JUN) (REGULAR)(EVEN) COP",
+        "session": "2024-25 (JAN_JUN) (REGULAR)(EVEN)",
         "academic_year": null,
         "passing_year": null,
         "marks": {
@@ -221,7 +218,7 @@
             "grade_points": null,
             "credits": null
           },
-          "Data Structure and Algorithm- II": {
+          "Data Structure and Algorithm-II": {
             "subject_code": "BCSE0401",
             "internal": 38.0,
             "external": 56.0,
@@ -250,16 +247,78 @@
             "grade": "B+",
             "grade_points": null,
             "credits": null
+          },
+          "Technical Communication Lab": {
+            "subject_code": "BASL0451",
+            "internal": 22.0,
+            "external": 20.0,
+            "total": 42.0,
+            "max_marks": 50.0,
+            "grade": "A",
+            "grade_points": null,
+            "credits": null
+          },
+          "Data Structure and Algorithm-II Lab": {
+            "subject_code": "BCSE0451",
+            "internal": 45.0,
+            "external": 46.0,
+            "total": 91.0,
+            "max_marks": 100.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Database Management Systems": {
+            "subject_code": "BCSE0452",
+            "internal": 42.0,
+            "external": 89.0,
+            "total": 131.0,
+            "max_marks": 150.0,
+            "grade": "A",
+            "grade_points": null,
+            "credits": null
+          },
+          "Operating Systems Lab": {
+            "subject_code": "BCSE0453",
+            "internal": 47.0,
+            "external": 44.0,
+            "total": 91.0,
+            "max_marks": 100.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Mini Project": {
+            "subject_code": "BCSE0459",
+            "internal": 45.0,
+            "external": null,
+            "total": 45.0,
+            "max_marks": 50.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Artificial Intelligence and Cyber Ethics": {
+            "subject_code": "BNC0401",
+            "internal": 44.0,
+            "external": 32.0,
+            "total": 76.0,
+            "max_marks": 100.0,
+            "grade": null,
+            "grade_points": null,
+            "credits": null
           }
         },
-        "total_marks_obtained": null,
-        "total_max_marks": null,
-        "sgpa": null,
-        "cgpa": 7.48,
-        "percentage": 74.77,
-        "result": null,
-        "extra_details": {},
-        "final_name": "faraz khan / फराज खान"
+        "total_marks_obtained": 1702.0,
+        "total_max_marks": 2200.0,
+        "sgpa": 8.67,
+        "cgpa": 8.64,
+        "percentage": 80.17,
+        "result": "Pass",
+        "extra_details": {
+          "Semesters covered": "3,4"
+        },
+        "final_name": "faraz khan / फराज़ खान"
       }
     ]
   },

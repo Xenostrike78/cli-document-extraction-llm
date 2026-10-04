@@ -12,66 +12,64 @@
         "mother_name": "ASMA KAUSAR",
         "gender": "MALE",
         "roll_no": "0679459",
-        "registration_no": null,
+        "registration_no": "23/14123/1044",
         "serial_no": "2423050",
         "board": "Uttar Pradesh Madhyamik Shiksha Parishad",
         "school": "M D S INTER COLLEGE NAJIBABAD BIJNOR",
         "institution_code": "23/14123/1044",
         "academic_year": "2020",
         "passing_year": 2020,
-        "address": null,
+        "address": "NAJIBABAD BIJNOR",
         "city": "Prayagraj",
-        "district": null,
+        "district": "BIJNOR",
         "state": "Uttar Pradesh",
         "pincode": null,
         "marks": {
           "HINDI": {
-            "theory": 51.0,
-            "practical": 29.0,
+            "theory": null,
+            "practical": null,
             "total": 80.0,
             "max_marks": 100.0
           },
           "ENGLISH": {
-            "theory": 52.0,
-            "practical": 29.0,
+            "theory": null,
+            "practical": null,
             "total": 81.0,
             "max_marks": 100.0
           },
           "MATHEMATICS": {
-            "theory": 60.0,
-            "practical": 30.0,
+            "theory": null,
+            "practical": null,
             "total": 90.0,
             "max_marks": 100.0
           },
           "SCIENCE": {
-            "theory": 62.0,
-            "practical": 28.0,
-            "total": 90.0,
+            "theory": null,
+            "practical": null,
+            "total": 80.0,
             "max_marks": 100.0
           },
           "SOCIAL SCIENCE": {
-            "theory": 41.0,
-            "practical": 29.0,
+            "theory": null,
+            "practical": null,
             "total": 70.0,
             "max_marks": 100.0
           },
           "COMPUTER": {
-            "theory": 50.0,
-            "practical": 38.0,
-            "total": 88.0,
+            "theory": null,
+            "practical": null,
+            "total": 80.0,
             "max_marks": 100.0
           }
         },
-        "total_marks_obtained": 499.0,
-        "total_max_marks": 600.0,
-        "percentage": 83.17,
+        "total_marks_obtained": 80.0,
+        "total_max_marks": 80.0,
+        "percentage": 80.17,
         "result": "PASSED",
         "extra_details": {
           "certificate_no": "23007172",
           "exam_type": "FULL EXAM",
-          "category_of_moral_yoga_sports_and_physical_education": "A",
-          "date_of_issue": "27TH JUNE 2020",
-          "place_of_issue": "Prayagraj, Uttar Pradesh"
+          "category_of_moral_yoga_sports_physical_education": "A"
         },
         "final_name": "mohammad saqib"
       }
@@ -82,20 +80,20 @@
         "document_type": "12th_marksheet",
         "source_file": "12th marksheet.pdf",
         "name": "MOHD SAQIB",
-        "dob": "23/0223/10",
+        "dob": "23/02/2003",
         "father_name": "MOHD AHSAN",
         "mother_name": "ASMA KAUSAR",
-        "gender": null,
+        "gender": "MALE",
         "roll_no": "2235521532",
-        "registration_no": null,
-        "serial_no": "23005703",
+        "registration_no": "23005703",
+        "serial_no": null,
         "board": "Uttar Pradesh School and Intermediate Education Board",
         "school": "M D S INTER COLLEGE NAJIBABAD BIJNOR",
         "institution_code": null,
-        "stream": null,
+        "stream": "B-SCIENCE",
         "academic_year": "2022",
         "passing_year": 2022,
-        "address": null,
+        "address": "NAJIBABAD BIJNOR",
         "city": "Prayagraj",
         "district": null,
         "state": "Uttar Pradesh",
@@ -104,57 +102,53 @@
           "GENERAL HINDI": {
             "theory": null,
             "practical": null,
-            "total": 73.0,
+            "total": 100.0,
             "max_marks": 100.0,
             "subject_type": null
           },
           "ENGLISH": {
             "theory": null,
             "practical": null,
-            "total": 69.0,
+            "total": 100.0,
             "max_marks": 100.0,
             "subject_type": null
           },
           "MATHEMATICS": {
             "theory": null,
             "practical": null,
-            "total": 59.0,
+            "total": 100.0,
             "max_marks": 100.0,
             "subject_type": null
           },
           "PHYSICS": {
             "theory": null,
             "practical": null,
-            "total": 79.0,
+            "total": 100.0,
             "max_marks": 100.0,
             "subject_type": null
           },
           "CHEMISTRY": {
             "theory": null,
             "practical": null,
-            "total": 79.0,
+            "total": 100.0,
             "max_marks": 100.0,
             "subject_type": null
           },
           "MORAL Y.S&P.EDU": {
             "theory": null,
             "practical": null,
-            "total": 40.0,
+            "total": 100.0,
             "max_marks": 100.0,
             "subject_type": null
           }
         },
         "total_marks_obtained": 359.0,
         "total_max_marks": 500.0,
-        "percentage": 66.5,
+        "percentage": 100.0,
         "result": "PASSED",
         "extra_details": {
-          "exam_type": "FULL EXAM",
-          "subject_group": "B-SCIENCE",
-          "division": "FIRST",
           "date_of_issue": "18TH JUNE'2022",
-          "place_of_issue": "Prayagraj, Uttar Pradesh",
-          "secretary_name": "Dibyankt Shukla"
+          "division": "FIRST"
         },
         "final_name": "mohammad saqib"
       }
@@ -171,10 +165,10 @@
         "gender": "Male",
         "roll_no": "2301331530095",
         "registration_no": null,
-        "enrollment_no": "23013315305641",
+        "enrollment_no": "230133153055641",
         "serial_no": null,
         "college": "NOIDA INSTITUTE OF ENGG. & TECHNOLOGY, GREATER NOIDA",
-        "university": "Dr. A.P.J Abdul Kalam Technical University, Uttar Pradesh",
+        "university": "Dr. A.P.J Abdul Kalam Technical University, Uttar Pradesh, Lucknow",
         "institution_code": "133",
         "course": "Bachelor of Technology",
         "course_code": "04",
@@ -183,7 +177,7 @@
         "exam_name": "REGULAR(EVEN)",
         "semester": 6,
         "session": "2025-26 (JAN_JUNE)",
-        "academic_year": "2025-26",
+        "academic_year": null,
         "passing_year": null,
         "marks": {
           "Natural Language Processing": {
@@ -245,15 +239,51 @@
             "grade": "A+",
             "grade_points": null,
             "credits": null
+          },
+          "Software Engineering and Design": {
+            "subject_code": "BCSE0653",
+            "internal": 44.0,
+            "external": 92.0,
+            "total": 136.0,
+            "max_marks": 150.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Mini Project": {
+            "subject_code": "BCSE0659",
+            "internal": 48.0,
+            "external": 98.0,
+            "total": 146.0,
+            "max_marks": 150.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Essence of Indian Traditional Knowledge": {
+            "subject_code": "BNC0602",
+            "internal": 34.0,
+            "external": 31.0,
+            "total": 65.0,
+            "max_marks": 100.0,
+            "grade": null,
+            "grade_points": null,
+            "credits": null
           }
         },
-        "total_marks_obtained": null,
-        "total_max_marks": null,
-        "sgpa": null,
-        "cgpa": 8.44,
-        "percentage": 84.38,
-        "result": null,
-        "extra_details": {},
+        "total_marks_obtained": 1789.0,
+        "total_max_marks": 2150.0,
+        "sgpa": 9.3,
+        "cgpa": 8.6,
+        "percentage": 85.17,
+        "result": "Pass",
+        "extra_details": {
+          "Semesters covered": "5,6",
+          "Total Subjects": 9,
+          "Total Credits": "23.00/23.00",
+          "Result Status": "CP(0)",
+          "Certification information": "BMC0084,BMC0087,BMC0093"
+        },
         "final_name": "mohammad saqib"
       }
     ]

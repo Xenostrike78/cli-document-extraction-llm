@@ -28,16 +28,23 @@ def calculate_percentage(marks, is_college=False):
 
 def update_records(records):
     """
-    Updates the percentages and cgpa directly in the records dictionary
-    before it is saved by the main pipeline.
+    Updates percentage only when it is not already extracted
+    from the document.
+
+    CGPA and SGPA are NOT calculated here.
+    They should be extracted directly from the document.
     """
     for doc_type, docs_list in records.items():
         for doc in docs_list:
             if "marks" in doc and doc["marks"]:
                 # doc_type could be 'college' but we check the actual document_type
                 is_college = doc.get("document_type") == "college_marksheet"
-                perc = calculate_percentage(doc["marks"], is_college)
-                if perc is not None:
-                    doc["percentage"] = perc
-                    if is_college:
-                        doc["cgpa"] = round(perc / 10, 2) if not (perc / 10).is_integer() else float(perc / 10)
+                # perc = calculate_percentage(doc["marks"], is_college)
+                if doc.get("percentage") is None:
+                    perc = calculate_percentage(doc["marks"], is_college)
+                    if perc is not None:
+                        doc["percentage"] = perc
+                # if perc is not None:
+                #     doc["percentage"] = perc
+                #     if is_college:
+                #         doc["cgpa"] = round(perc / 10, 2) if not (perc / 10).is_integer() else float(perc / 10)

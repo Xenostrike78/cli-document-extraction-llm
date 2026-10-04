@@ -13,61 +13,67 @@
         "gender": null,
         "roll_no": "25163040",
         "registration_no": "U121/81198/0088",
-        "serial_no": "SS ET 2021/1",
+        "serial_no": null,
         "board": "CENTRAL BOARD OF SECONDARY EDUCATION",
         "school": "81198 - DELHI PUB GLOBAL SCH SIHORA GOVIND MORADABAD UP",
-        "institution_code": "81198",
-        "academic_year": null,
+        "institution_code": null,
+        "academic_year": "2021",
         "passing_year": 2021,
         "address": null,
         "city": "Delhi",
-        "district": null,
-        "state": null,
+        "district": "Delhi",
+        "state": "Delhi",
         "pincode": null,
         "marks": {
           "ENGLISH LNG & LIT.": {
-            "theory": 72.0,
-            "practical": 20.0,
+            "theory": null,
+            "practical": null,
             "total": 92.0,
-            "max_marks": null
+            "max_marks": 100.0
           },
           "HINDI COURSE-A": {
-            "theory": 64.0,
-            "practical": 18.0,
+            "theory": null,
+            "practical": null,
             "total": 82.0,
-            "max_marks": null
+            "max_marks": 100.0
           },
           "MATHEMATICS STANDARD": {
-            "theory": 62.0,
-            "practical": 19.0,
+            "theory": null,
+            "practical": null,
             "total": 81.0,
-            "max_marks": null
+            "max_marks": 100.0
           },
           "SCIENCE": {
-            "theory": 56.0,
-            "practical": 19.0,
+            "theory": null,
+            "practical": null,
             "total": 75.0,
-            "max_marks": null
+            "max_marks": 100.0
           },
           "SOCIAL SCIENCE": {
-            "theory": 57.0,
-            "practical": 20.0,
+            "theory": null,
+            "practical": null,
             "total": 77.0,
+            "max_marks": 100.0
+          },
+          "ADDITIONAL SUBJECT": {
+            "theory": null,
+            "practical": null,
+            "total": null,
             "max_marks": null
           },
           "COMPUTER APPLICATIONS": {
-            "theory": 41.0,
-            "practical": 50.0,
+            "theory": null,
+            "practical": null,
             "total": 91.0,
-            "max_marks": null
+            "max_marks": 100.0
           }
         },
-        "total_marks_obtained": null,
-        "total_max_marks": null,
+        "total_marks_obtained": 481.0,
+        "total_max_marks": 600.0,
         "percentage": 83.0,
         "result": "PASS",
         "extra_details": {
-          "date_of_issue": "03-08-2021"
+          "serial_no": "SSET20217"
         },
         "final_name": "mohammad arbaz khan"
       }
@@ -81,62 +87,62 @@
         "dob": "01-04-2004",
         "father_name": "SAGHEER KHAN",
         "mother_name": "SHIMMI KHAN",
-        "gender": null,
+        "gender": "Male",
         "roll_no": "25671497",
         "registration_no": null,
         "serial_no": null,
         "board": "CENTRAL BOARD OF SECONDARY EDUCATION",
         "school": "DELHI PUB GLOBAL SCH SIHORA GOVIND MORADABAD UP (81198)",
-        "institution_code": "81198",
+        "institution_code": null,
         "stream": null,
-        "academic_year": null,
+        "academic_year": "2023",
         "passing_year": 2023,
         "address": null,
-        "city": null,
-        "district": null,
-        "state": null,
-        "pincode": null,
+        "city": "Delhi",
+        "district": "MORADABAD",
+        "state": "UP",
+        "pincode": "81198",
         "marks": {
           "ENGLISH CORE": {
-            "theory": 73.0,
-            "practical": 20.0,
+            "theory": null,
+            "practical": null,
             "total": 93.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "MATHEMATICS": {
-            "theory": 40.0,
-            "practical": 20.0,
+            "theory": null,
+            "practical": null,
             "total": 60.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "PHYSICS": {
-            "theory": 38.0,
-            "practical": 29.0,
+            "theory": null,
+            "practical": null,
             "total": 67.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "CHEMISTRY": {
-            "theory": 46.0,
-            "practical": 28.0,
+            "theory": null,
+            "practical": null,
             "total": 74.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "COMPUTER SCIENCE": {
-            "theory": 56.0,
-            "practical": 30.0,
+            "theory": null,
+            "practical": null,
             "total": 86.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "HINDI CORE": {
-            "theory": 60.0,
-            "practical": 20.0,
+            "theory": null,
+            "practical": null,
             "total": 80.0,
-            "max_marks": null,
+            "max_marks": 100.0,
             "subject_type": null
           },
           "WORK EXPERIENCE": {
@@ -144,21 +150,21 @@
             "practical": null,
             "total": null,
             "max_marks": null,
-            "subject_type": null
+            "subject_type": "A1"
           },
           "HEALTH & PHYSICAL EDUCATION": {
             "theory": null,
             "practical": null,
             "total": null,
             "max_marks": null,
-            "subject_type": null
+            "subject_type": "A1"
           },
           "GENERAL STUDIES": {
             "theory": null,
             "practical": null,
             "total": null,
             "max_marks": null,
-            "subject_type": null
+            "subject_type": "A1"
           }
         },
         "total_marks_obtained": null,
@@ -166,9 +172,7 @@
         "percentage": 76.67,
         "result": "PASS",
         "extra_details": {
-          "date_of_declaration_of_result": "12/05/2023",
-          "exam_name": "SENIOR SCHOOL CERTIFICATE EXAMINATION, 2023",
-          "digital_signature_date": "18/06/2023 16:54:18 IST"
+          "date_of_declaration_of_result": "12/05/2023"
         },
         "final_name": "mohammad arbaz khan"
       }
@@ -194,10 +198,10 @@
         "course_code": "04",
         "branch": "Computer Science And Engineering(Artificial Intelligence & Machine Learning)",
         "branch_code": "153",
-        "exam_name": "NIELT Result (One View)",
+        "exam_name": "Miet Result (One View)",
         "semester": 6,
         "session": "2025-26 (JAN_JUNE) (REGULAR)(EVEN)",
-        "academic_year": null,
+        "academic_year": "2025-26",
         "passing_year": null,
         "marks": {
           "Natural Language Processing": {
@@ -249,15 +253,61 @@
             "grade": "A",
             "grade_points": null,
             "credits": null
+          },
+          "Generative AI": {
+            "subject_code": "BCSAI0652",
+            "internal": 45.0,
+            "external": 92.0,
+            "total": 137.0,
+            "max_marks": 150.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Software Engineering and Design": {
+            "subject_code": "BCSE0653",
+            "internal": 45.0,
+            "external": 92.0,
+            "total": 137.0,
+            "max_marks": 150.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Mini Project": {
+            "subject_code": "BCSE0659",
+            "internal": 48.0,
+            "external": 98.0,
+            "total": 146.0,
+            "max_marks": 150.0,
+            "grade": "A+",
+            "grade_points": null,
+            "credits": null
+          },
+          "Essence of Indian Traditional Knowledge": {
+            "subject_code": "BNC0602",
+            "internal": 36.0,
+            "external": 31.0,
+            "total": 67.0,
+            "max_marks": 100.0,
+            "grade": null,
+            "grade_points": null,
+            "credits": null
           }
         },
-        "total_marks_obtained": null,
-        "total_max_marks": null,
-        "sgpa": null,
-        "cgpa": 7.28,
-        "percentage": 72.77,
-        "result": null,
-        "extra_details": {},
+        "total_marks_obtained": 1692.0,
+        "total_max_marks": 2150.0,
+        "sgpa": 8.57,
+        "cgpa": 8.25,
+        "percentage": 80.0,
+        "result": "Pass",
+        "extra_details": {
+          "Semesters covered": "5,6",
+          "Total Subjects": 9,
+          "Total Credits": "23.00/23.00",
+          "Result Status": "Pass",
+          "Certification information": "BMC0084,BMC0087,BMC0093"
+        },
         "final_name": "mohammad arbaz khan"
       }
     ]
