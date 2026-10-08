@@ -22,17 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent
 ROOT_FOLDER = BASE_DIR / "documents"
 CONVERTED_FOLDER = BASE_DIR / "converted_images"
 OUTPUT_FOLDER = BASE_DIR / "output"
-CACHE_FOLDER = OUTPUT_FOLDER / "_cache"   # per-document results, so reruns do not spend API tokens
+# CACHE_FOLDER = OUTPUT_FOLDER / "_cache"   # per-document results, so reruns do not spend API tokens
 
 IMAGE_EXTENSIONS = {".jpg",".jpeg",".png"}
 
-def _fingerprint(path: Path) -> str:
-    stat = path.stat()
-    return f"{stat.st_size}-{int(stat.st_mtime)}"
+# def _fingerprint(path: Path) -> str:
+#     stat = path.stat()
+#     return f"{stat.st_size}-{int(stat.st_mtime)}"
 
 
-def _cache_path(candidate_id: str, file_path: Path) -> Path:
-    return CACHE_FOLDER / candidate_id / f"{file_path.stem}.json"
+# def _cache_path(candidate_id: str, file_path: Path) -> Path:
+#     return CACHE_FOLDER / candidate_id / f"{file_path.stem}.json"
 
 
 def _bucket_for(document_type: str):
@@ -87,15 +87,15 @@ def extract_candidate_records(candidate: dict) -> dict:
             # ========================================================
             # STEP 0: REUSE A PREVIOUS RESULT FOR THE SAME UNCHANGED FILE
             # ========================================================
-            cache_file = _cache_path(candidate_id, file_path)
-            if cache_file.exists():
-                cached = json.loads(cache_file.read_text(encoding="utf-8"))
-                if cached.get("fingerprint") == _fingerprint(file_path):
-                    bucket = _bucket_for(cached["document_type"])
-                    if bucket:
-                        print(f"  Using cached result ({cached['document_type']}).")
-                        records[bucket].append(cached["record"])
-                        continue
+            # cache_file = _cache_path(candidate_id, file_path)
+            # if cache_file.exists():
+            #     cached = json.loads(cache_file.read_text(encoding="utf-8"))
+            #     if cached.get("fingerprint") == _fingerprint(file_path):
+            #         bucket = _bucket_for(cached["document_type"])
+            #         if bucket:
+            #             print(f"  Using cached result ({cached['document_type']}).")
+            #             records[bucket].append(cached["record"])
+            #             continue
 
             # ========================================================
             # STEP 1: CONVERT PDF TO JPG
@@ -164,18 +164,18 @@ def extract_candidate_records(candidate: dict) -> dict:
                 continue
             records[bucket].append(record)
 
-            cache_file.parent.mkdir(parents=True, exist_ok=True)
-            cache_file.write_text(
-                json.dumps(
-                    {
-                        "fingerprint": _fingerprint(file_path),
-                        "document_type": document_type,
-                        "record": record,
-                    },
-                    ensure_ascii=False,
-                ),
-                encoding="utf-8",
-            )
+            # cache_file.parent.mkdir(parents=True, exist_ok=True)
+            # cache_file.write_text(
+            #     json.dumps(
+            #         {
+            #             "fingerprint": _fingerprint(file_path),
+            #             "document_type": document_type,
+            #             "record": record,
+            #         },
+            #         ensure_ascii=False,
+            #     ),
+            #     encoding="utf-8",
+            # )
 
         except Exception as exc:
             print(f"    Extraction failed for {file_path.name}: {exc}")
@@ -211,9 +211,9 @@ def process_candidate(candidate: dict):
     candidate_output = {
         "candidate_id": candidate_id,
         "documents": {
-            "class_10": records["class_10"],
-            "class_12": records["class_12"],
-            "college": records["college"],
+            "class_10": records["class_10"] or None,
+            "class_12": records["class_12"] or None,
+            "college": records["college"] or None
         },
         "identity_confidence_score": evaluate_overall_identity(records)
     }

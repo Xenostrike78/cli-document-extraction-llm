@@ -15,7 +15,20 @@ def calculate_percentage(marks, is_college=False):
             
     if not valid_totals:
         return None
-        
+    
+    total_obtained = sum(valid_totals)
+    if is_college:
+        total_max = sum(valid_max_marks)
+
+        if total_max == 0:
+            return None
+
+        percentage = (total_obtained / total_max) * 100
+
+    else:
+        total_max = len(valid_totals) * 100
+        percentage = (total_obtained / total_max) * 100
+    '''
     if is_college:
         total_max = sum(valid_max_marks)
         if total_max == 0:
@@ -24,7 +37,17 @@ def calculate_percentage(marks, is_college=False):
     else:
         percentage = (sum(valid_totals) / (len(valid_totals) * 100)) * 100
         
-    return round(percentage, 2) if not percentage.is_integer() else float(percentage)
+    '''
+    # return round(percentage, 2) if not percentage.is_integer() else float(percentage)
+    return {
+        "total_marks_obtained": total_obtained,
+        "total_max_marks": total_max,
+        "percentage": (
+            round(percentage, 2)
+            if not percentage.is_integer()
+            else float(percentage)
+        ),
+    }
 
 def update_records(records):
     """
@@ -39,11 +62,16 @@ def update_records(records):
             if "marks" in doc and doc["marks"]:
                 # doc_type could be 'college' but we check the actual document_type
                 is_college = doc.get("document_type") == "college_marksheet"
+                result = calculate_percentage(doc["marks"], is_college)
+                if result is not None:
+                    doc["total_marks_obtained"] = result["total_marks_obtained"]
+                    doc["total_max_marks"] = result["total_max_marks"]
+                    doc["percentage"] = result["percentage"]
                 # perc = calculate_percentage(doc["marks"], is_college)
-                if doc.get("percentage") is None:
-                    perc = calculate_percentage(doc["marks"], is_college)
-                    if perc is not None:
-                        doc["percentage"] = perc
+                # if doc.get("percentage") is None:
+                #     perc = calculate_percentage(doc["marks"], is_college)
+                #     if perc is not None:
+                #         doc["percentage"] = perc
                 # if perc is not None:
                 #     doc["percentage"] = perc
                 #     if is_college:

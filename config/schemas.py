@@ -23,8 +23,8 @@ class BaseDocument(BaseModel):
 # ============================================================
 
 class Class10Mark(BaseModel):
-    theory: Optional[float] = None
-    practical: Optional[float] = None
+    # theory: Optional[float] = None
+    # practical: Optional[float] = None
     total: Optional[float] = None
     max_marks: Optional[float] = None
 
@@ -65,8 +65,8 @@ class Class10Schema(BaseDocument):
 # ============================================================
 
 class Class12Mark(BaseModel):
-    theory: Optional[float] = None
-    practical: Optional[float] = None
+    # theory: Optional[float] = None
+    # practical: Optional[float] = None
     total: Optional[float] = None
     max_marks: Optional[float] = None
     subject_type: Optional[str] = None
@@ -83,7 +83,7 @@ class Class12Schema(BaseDocument):
     school: Optional[str] = None
     institution_code: Optional[str] = None
 
-    stream: Optional[str] = None
+    # stream: Optional[str] = None
 
     academic_year: Optional[str] = None
     passing_year: Optional[int] = None
@@ -161,25 +161,3 @@ class CollegeSchema(BaseDocument):
     extra_details: Dict[str, Any] = {}
     # extra_details: Dict[str, str] = Field(default_factory=dict)
 
-
-# ============================================================
-# CANDIDATE
-# ============================================================
-
-class CandidateDocuments(BaseModel):
-    class_10: List[Class10Schema] = Field(default_factory=list)
-    class_12: List[Class12Schema] = Field(default_factory=list)
-    college: List[CollegeSchema] = Field(default_factory=list)
-
-
-class Candidate(BaseModel):
-    candidate_id: str
-    documents: CandidateDocuments
-
-
-# ============================================================
-# ROOT
-# ============================================================
-
-class CandidatesResponse(BaseModel):
-    candidates: List[Candidate] = Field(default_factory=list)

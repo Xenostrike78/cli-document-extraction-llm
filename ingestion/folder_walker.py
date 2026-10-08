@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-SUPPORTED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png", ".docx"}
+SUPPORTED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
 
 
 def walk_candidates(root_folder):
