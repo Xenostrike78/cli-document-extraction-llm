@@ -43,12 +43,6 @@ class Class10Schema(BaseDocument):
     academic_year: Optional[str] = None
     passing_year: Optional[int] = None
 
-    address: Optional[str] = None
-    city: Optional[str] = None
-    district: Optional[str] = None
-    state: Optional[str] = None
-    pincode: Optional[str] = None
-
     marks: Dict[str, Class10Mark] = Field(default_factory=dict)
 
     total_marks_obtained: Optional[float] = None
@@ -87,12 +81,6 @@ class Class12Schema(BaseDocument):
 
     academic_year: Optional[str] = None
     passing_year: Optional[int] = None
-
-    address: Optional[str] = None
-    city: Optional[str] = None
-    district: Optional[str] = None
-    state: Optional[str] = None
-    pincode: Optional[str] = None
 
     marks: Dict[str, Class12Mark] = Field(default_factory=dict)
 

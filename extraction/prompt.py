@@ -28,8 +28,6 @@ _PERSON = """
 CANDIDATE: name, dob, father_name, mother_name, gender
 """
 
-_ADDRESS = "ADDRESS: address, city, district, state, pincode\n"
-
 _SCHOOL_RESULT = "RESULT: total_marks_obtained, total_max_marks, percentage, result\n"
 
 _MARKS_RULES = """
@@ -58,16 +56,28 @@ _CLASS10_PROMPT = (
     _HEADER.format(doc="Class 10 / Secondary / High School marksheet or certificate.")
     + _PERSON
     + """IDENTIFIERS: roll_no, registration_no, serial_no
-ACADEMIC / INSTITUTION: board, school, institution_code, academic_year, passing_year, exam_name
+ACADEMIC / INSTITUTION: board, school, institution_code, academic_year, passing_year
 """
-    + _ADDRESS
     + _SCHOOL_RESULT
     + """
+IDENTIFIER RULES:
+- Roll No. -> roll_no. Registration No. -> registration_no. Serial No. -> serial_no.
+- Certificate No. is NOT registration_no; keep it in extra_details if needed.
+- DOB and gender only if explicitly printed. Percentage only if explicitly printed.
+
 MARKS: per subject extract total, max_marks.
-Column mapping:
-- Total → total
-- max_marks → 100 for every subject
-Ignore the Theory / TH / Written and Practical / PR / IA columns. If no total is printed for a subject, total = null (never copy a theory or practical value into total).
+- Find the header row first. total = the number printed under the column headed
+  Total / Total Marks / योग, on the SAME row as the subject. It is the LAST numeric
+  column of the row: after the component columns (Theory, Practical, IA, Paper-wise)
+  and before Grade / Result.
+- Never use the Max Marks column (it holds the maximum, usually 100) or any
+  Theory / Practical / IA / paper-wise value as total.
+- max_marks = 100 for every subject.
+- Marks are 2-3 digit numbers ("080" -> 80). A total above max_marks means you read the
+  wrong column; re-read the row.
+- A row's component marks normally add up to its Total. Use this only to confirm you
+  picked the right column; output the printed Total, never a sum.
+- No Total printed for a subject -> total = null. Grades (A1, B2) are not marks.
 """
     + _MARKS_RULES
     + _EXTRA
@@ -85,64 +95,47 @@ _CLASS12_PROMPT = (
     )
     + _PERSON
     + """IDENTIFIERS: roll_no, registration_no, serial_no
-ACADEMIC / INSTITUTION: board, school, institution_code, academic_year, passing_year, exam_name
+ACADEMIC / INSTITUTION: board, school, institution_code, academic_year, passing_year
 """
-    + _ADDRESS
     + _SCHOOL_RESULT
     + """
 IDENTIFIER RULES:
-- Extract each field only from its printed label.
-- Roll No. → roll_no.
-- Registration No. → registration_no. Certificate No. is NOT registration_no;
-  store it in extra_details if needed.
-- Serial No. → serial_no.
-- Institution / school code → institution_code; preserve slashes.
-- DOB → only from an explicit Date of Birth / DOB field.
-- Gender → only if explicitly printed; never infer it.
-- Percentage → only if explicitly printed.
-- Printed notes, certificate number, division, exam type, issue date, etc.
-  may go in extra_details.
+- Roll No. -> roll_no. Registration No. -> registration_no. Serial No. -> serial_no.
+- Certificate No. is NOT registration_no; keep it in extra_details.
+- Institution / school / centre code -> institution_code; preserve slashes. A code with
+  slashes is never a date.
+- DOB only from an explicit Date of Birth field (many certificates print none).
+  Gender only if explicitly printed; never infer it. Percentage only if explicitly printed.
+- Division, exam type, issue date, place etc. may go in extra_details.
 
-MARKS:
-- Board layouts differ. Read the table headers first; never assume a fixed layout.
-- For every visible subject, extract:
-  total, max_marks, subject_type.
-- "total" = the FINAL obtained marks from the column explicitly labelled
-  Total / Total Marks / Obtained Marks, or an equivalent final-obtained-marks
-  column.
-- "max_marks" = 100 for every subject.
-- "subject_type" = only when explicitly printed; never infer it.
-
-- If a numeric value is visible under the Total column for a subject,
-  ALWAYS extract that value as "total".
-- Do not set "total" to null when a numeric value is visibly present under
-  the Total column.
-- Paper-wise values such as "1/040 P/042" are component marks and must NOT
-  be used as "total" when a separate Total column exists.
-
-IMPORTANT:
-- Never use Max Marks as total.
-- Never use Theory, Practical, Internal, External, Lab, Project, or
-  Paper-wise marks as total when a separate Total column exists.
-- Never calculate total from component marks.
-- If no Total column exists, total = null unless another column is
-  explicitly identified as the final obtained mark.
-- Paper-wise values such as "1/073" or "1/051 P/028" are component marks,
-  not the final total. Use the separate Total column.
-- A value such as "359/500" under Grand Total / Result means:
-  total_marks_obtained = 359 and total_max_marks = 500.
-- Include every visible subject row, including rows with "---" or no marks.
-- Grades such as A1, A2, B1, B2 are not marks.
-
-SELF-CHECK:
-- Verify that total and max_marks came from their respective headers.
-- total must not exceed max_marks when max_marks is printed.
-- Never join values across "/" or adjacent columns.
+MARKS: per subject extract total, max_marks, subject_type.
+- Read the header row first; board layouts differ.
+- total = the single number printed under the column headed Total / Total Marks /
+  Obtained Marks / योग, on the SAME row as the subject. It sits to the right of the
+  component columns (Theory, Practical, Paper-wise) and before Grade / Result / Grand Total.
+- Paper-wise cells look like "1/062" or "1/044 P/030", i.e. <paper>/<marks>. They are
+  components, NOT the total. The "/" only separates the paper label from the marks:
+  "1/062" is not 1062 and "1/044 P/030" is not 1030.
+  Example: "SUBJECT | 100 | 1/044 P/030 | 074 D" -> total 74. A letter after a total
+  (D = distinction) is a flag, not a digit.
+- max_marks = 100 for every subject. subject_type only when explicitly printed.
+- Marks are 2-3 digit numbers ("073" -> 73). A total above max_marks means you read the
+  wrong column; re-read the row.
+- A row's component marks normally add up to its Total (44 + 30 = 74). Use this only to
+  confirm you picked the right column; output the printed Total, never a sum.
+- Every row, including Moral / Yoga / Sports / Physical Education, has its own printed
+  Total: extract it. The note that these marks "have no effect on overall Result" concerns
+  the Grand Total only; it never makes a subject total 0.
+- total = 0 only when the Total is printed as 0 or 000. Blank or "---" -> null. Unreadable
+  -> null. Grades are not marks.
+- Under Grand Total / Result, "359/500" means total_marks_obtained = 359 and
+  total_max_marks = 500.
 """
     + _MARKS_RULES
     + _EXTRA
     + _FOOTER
 )
+
 
 # ============================================================
 # COLLEGE / UNIVERSITY
@@ -155,7 +148,6 @@ _COLLEGE_PROMPT = (
 INSTITUTION: college, university, institution_code
 PROGRAM: course, course_code, branch, branch_code, exam_name, semester, session, academic_year, passing_year
 """
-    + _ADDRESS
     + """
 RESULT: total_marks_obtained, total_max_marks, sgpa, cgpa, percentage, result
 
@@ -306,7 +298,7 @@ Do not return markdown. Do not explain your answer."""
         )
         output_block = f"""OUTPUT FORMAT:
 Return ONLY one valid JSON object.
-- Put every scalar field at the TOP LEVEL of the JSON, using the exact field names above. NEVER group fields into sub-objects (no "address": {{"city": ...}}, no "result": {{...}}); the headings above are labels, not keys.
+- Put every scalar field at the TOP LEVEL of the JSON, using the exact field names above. NEVER group fields into sub-objects (no "result": {{...}}); the headings above are labels, not keys.
 - Include ONLY scalar fields that have a printed value. OMIT any field that would be null.
 - Do NOT include "document_type".
 {marks_rule}
