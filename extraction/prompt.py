@@ -24,9 +24,24 @@ GENERAL RULES:
 
 _HEADER = "You are an academic document extraction system.\n\nDOCUMENT TYPE:\n{doc}\n\nExtract the following if explicitly printed.\n"
 
+# _Person updated by saqib
 _PERSON = """
-CANDIDATE: name, dob, father_name, mother_name, gender
+CANDIDATE FIELDS:
+- name
+- father_name
+- mother_name
+
+RULES:
+- Extract the candidate's name from the candidate-name field or
+  the sentence identifying the person who passed the examination.
+- Extract father_name and mother_name only when supported by
+  explicit labels or clear parent-identifying text.
+- Never confuse the candidate's name with either parent's name.
+- Preserve names as printed.
+- Do not extract DOB, gender, address, or other personal details.
 """
+
+_ADDRESS = "ADDRESS: address, city, district, state, pincode\n"
 
 _SCHOOL_RESULT = "RESULT: total_marks_obtained, total_max_marks, percentage, result\n"
 
@@ -53,34 +68,38 @@ _FOOTER = "\nReturn ONLY valid JSON in the OUTPUT FORMAT given below.\n"
 # ============================================================
 
 _CLASS10_PROMPT = (
-    _HEADER.format(doc="Class 10 / Secondary / High School marksheet or certificate.")
+    _HEADER.format(
+        doc="Class 10 / Secondary / High School marksheet or certificate."
+    )
     + _PERSON
-    + """IDENTIFIERS: roll_no, registration_no, serial_no
-ACADEMIC / INSTITUTION: board, school, institution_code, academic_year, passing_year
-"""
-    + _SCHOOL_RESULT
     + """
-IDENTIFIER RULES:
-- Roll No. -> roll_no. Registration No. -> registration_no. Serial No. -> serial_no.
-- Certificate No. is NOT registration_no; keep it in extra_details if needed.
-- DOB and gender only if explicitly printed. Percentage only if explicitly printed.
+INSTITUTION:
+- board
+- school
 
-MARKS: per subject extract total, max_marks.
-- Find the header row first. total = the number printed under the column headed
-  Total / Total Marks / योग, on the SAME row as the subject. It is the LAST numeric
-  column of the row: after the component columns (Theory, Practical, IA, Paper-wise)
-  and before Grade / Result.
-- Never use the Max Marks column (it holds the maximum, usually 100) or any
-  Theory / Practical / IA / paper-wise value as total.
-- max_marks = 100 for every subject.
-- Marks are 2-3 digit numbers ("080" -> 80). A total above max_marks means you read the
-  wrong column; re-read the row.
-- A row's component marks normally add up to its Total. Use this only to confirm you
-  picked the right column; output the printed Total, never a sum.
-- No Total printed for a subject -> total = null. Grades (A1, B2) are not marks.
+OVERALL RESULT:
+- total_marks_obtained
+- total_max_marks
+- percentage
+- result
+
+SUBJECT MARKS:
+For each subject, extract:
+- total
+- max_marks
+
+RULES:
+- Preserve the subject name as printed.
+- Extract every visible subject row.
+- total must represent the final obtained marks.
+- max_marks must represent the maximum marks.
+- Do not confuse obtained marks with maximum marks.
+- Do not calculate totals or percentages.
+- If a value is missing or unreadable, use null.
+- Ignore roll numbers, registration numbers, serial numbers,
+  institution codes, dates, addresses, and other unrequested fields.
 """
     + _MARKS_RULES
-    + _EXTRA
     + _FOOTER
 )
 
@@ -94,133 +113,108 @@ _CLASS12_PROMPT = (
         doc="Class 12 / Senior Secondary / Intermediate marksheet or certificate."
     )
     + _PERSON
-    + """IDENTIFIERS: roll_no, registration_no, serial_no
-ACADEMIC / INSTITUTION: board, school, institution_code, academic_year, passing_year
-"""
-    + _SCHOOL_RESULT
     + """
-IDENTIFIER RULES:
-- Roll No. -> roll_no. Registration No. -> registration_no. Serial No. -> serial_no.
-- Certificate No. is NOT registration_no; keep it in extra_details.
-- Institution / school / centre code -> institution_code; preserve slashes. A code with
-  slashes is never a date.
-- DOB only from an explicit Date of Birth field (many certificates print none).
-  Gender only if explicitly printed; never infer it. Percentage only if explicitly printed.
-- Division, exam type, issue date, place etc. may go in extra_details.
+INSTITUTION:
+- board
+- school
 
-MARKS: per subject extract total, max_marks, subject_type.
-- Read the header row first; board layouts differ.
-- total = the single number printed under the column headed Total / Total Marks /
-  Obtained Marks / योग, on the SAME row as the subject. It sits to the right of the
-  component columns (Theory, Practical, Paper-wise) and before Grade / Result / Grand Total.
-- Paper-wise cells look like "1/062" or "1/044 P/030", i.e. <paper>/<marks>. They are
-  components, NOT the total. The "/" only separates the paper label from the marks:
-  "1/062" is not 1062 and "1/044 P/030" is not 1030.
-  Example: "SUBJECT | 100 | 1/044 P/030 | 074 D" -> total 74. A letter after a total
-  (D = distinction) is a flag, not a digit.
-- max_marks = 100 for every subject. subject_type only when explicitly printed.
-- Marks are 2-3 digit numbers ("073" -> 73). A total above max_marks means you read the
-  wrong column; re-read the row.
-- A row's component marks normally add up to its Total (44 + 30 = 74). Use this only to
-  confirm you picked the right column; output the printed Total, never a sum.
-- Every row, including Moral / Yoga / Sports / Physical Education, has its own printed
-  Total: extract it. The note that these marks "have no effect on overall Result" concerns
-  the Grand Total only; it never makes a subject total 0.
-- total = 0 only when the Total is printed as 0 or 000. Blank or "---" -> null. Unreadable
-  -> null. Grades are not marks.
-- Under Grand Total / Result, "359/500" means total_marks_obtained = 359 and
-  total_max_marks = 500.
+OVERALL RESULT:
+- total_marks_obtained
+- total_max_marks
+- percentage
+- result
+
+SUBJECT MARKS:
+For every visible subject, extract:
+- total
+- max_marks
+- subject_type
+
+RULES:
+- Read the table headers before extracting marks.
+- total must represent the final obtained marks.
+- max_marks must represent the maximum marks.
+- subject_type must be extracted only when explicitly printed.
+- Do not confuse grades with marks.
+- Do not calculate totals or percentages.
+- Include every visible subject, even if some marks are missing.
+- Ignore roll numbers, registration numbers, serial numbers,
+  institution codes, dates, addresses, and other unrequested fields.
 """
     + _MARKS_RULES
-    + _EXTRA
     + _FOOTER
 )
-
 
 # ============================================================
 # COLLEGE / UNIVERSITY
 # ============================================================
 
 _COLLEGE_PROMPT = (
-    _HEADER.format(doc="College / University marksheet, semester result, grade card or transcript.")
+    _HEADER.format(
+        doc="College / University marksheet, semester result, grade card or transcript."
+    )
     + _PERSON
-    + """IDENTIFIERS: roll_no, registration_no, enrollment_no, serial_no
-INSTITUTION: college, university, institution_code
-PROGRAM: course, course_code, branch, branch_code, exam_name, semester, session, academic_year, passing_year
-"""
     + """
-RESULT: total_marks_obtained, total_max_marks, sgpa, cgpa, percentage, result
+INSTITUTION:
+- college
+- university
 
-PROGRAM DETAILS:
-- Extract session, academic_year and passing_year only when explicitly printed.
+PROGRAMME:
+- course
+- branch
+- semester
+- academic_year
+- passing_year
 
-RESULT VALUE PRIORITY:
+OVERALL RESULT:
+- total_marks_obtained
+- total_max_marks
+- sgpa
+- cgpa
+- percentage
+- result
 
-CGPA AND SGPA ARE DIFFERENT FIELDS. NEVER SWAP THEM.
+SUBJECT MARKS:
+For every visible subject, extract:
+- internal
+- external
+- total
+- max_marks
+- grade
+- grade_points
+- credits
 
-1. CGPA:
-   - Search the ENTIRE document specifically for the label "CGPA".
-   - Also recognize "C.G.P.A", "Cumulative GPA", or equivalent clearly
-     labelled cumulative GPA.
-   - If you see "CGPA: 8.25", output:
-     "cgpa": 8.25
-   - The value immediately associated with the CGPA label belongs ONLY
-     to "cgpa".
+GPA RULES:
+- Extract SGPA and CGPA independently.
+- Never swap SGPA and CGPA.
+- Never calculate either value.
+- Extract each value only when supported by the printed label.
 
-2. SGPA:
-   - Search the ENTIRE document specifically for the label "SGPA".
-   - Also recognize "S.G.P.A", "Semester GPA", or equivalent clearly
-     labelled semester GPA.
-   - If you see "SGPA: 8.57", output:
-     "sgpa": 8.57
-   - The value immediately associated with the SGPA label belongs ONLY
-     to "sgpa".
-
-3. IMPORTANT:
-   - Do NOT assume the first GPA value is SGPA.
-   - Do NOT assume the first GPA value is CGPA.
-   - Do NOT swap CGPA and SGPA.
-   - Do NOT derive one from the other.
-   - Do NOT calculate either value.
-   - If the document visibly contains "CGPA: 8.25", cgpa MUST be 8.25.
-   - If the document visibly contains "SGPA: 8.57", sgpa MUST be 8.57.
-   - If a label is not visible, leave that field omitted.
-
-MARKS: per subject row (key = subject name) extract subject_code, internal, external, total, max_marks, grade, grade_points, credits.
-Column mapping:
-- Subject Code / Code → subject_code
-- Internal Obtained → internal
-- External Obtained → external
-- Total Obtained / Total → total
-- Maximum Marks / Max → max_marks
-- Grade / Letter Grade → grade
-- Grade Point / Grade Points → grade_points
-- Credit / Credits → credits
-
-MARKS RULES:
-- Read column headers before rows; match values to the correct subject row.
-- Read EVERY row, first to last; do NOT stop after 4 or 5 subjects.
-- Include all subjects, including grade-only ones and Theory, Practical, Lab, Project, CA, Audit, Elective and other types.
-- Never calculate total, SGPA, CGPA or percentage.
-- Never move internal/external marks between subjects.
-- Never put maximum marks into obtained marks.
-- Preserve subject names and codes as printed; if names repeat, use a unique key without losing either row.
-- Blank, "-", AB or NA marks → null.
-
-SEMESTER HANDLING:
-- "semester" (integer) = the standalone current/result semester field (e.g. "Semester : 6" → 6; "Semester : 4" → 4).
-- A combined value (e.g. "Semester : 5,6" or "3,4") means semesters covered, NOT the current semester. Store it as extra_details {"Semesters covered": "5,6"}.
-- If both exist, the standalone field wins: header "3,4" + detail "4" → semester=4, extra_details {"Semesters covered": "3,4"}; header "5,6" + detail "6" → semester=6, extra_details {"Semesters covered": "5,6"}.
-- NEVER put "3,4", "5,6", etc. in "semester". If only a combined value is visible, semester=null and store the combined value in extra_details; do not infer the current semester.
+SEMESTER RULES:
+- Extract semester as an integer only when a standalone semester
+  value is visible.
+- If the document shows a combined value such as "5,6", do not
+  place it in semester.
+- Store a combined semester value in extra_details as
+  "Semesters covered".
+- Do not infer a semester from other fields.
 
 EXTRA DETAILS:
-Store other useful labelled information that fits no field above in "extra_details": {}
-(e.g. Total Subjects, Total Credits, Remarks, Result Status, Previous Semester SGPA, Certification information).
-Never put table rows in extra_details.
+- Store only "Semesters covered" and "Result Status", when printed.
+- Do not store any other extra details.
+- Never put subject marks in extra_details.
+
+GENERAL RULES:
+- Preserve subject names as printed.
+- Read every visible subject row.
+- Do not calculate marks, percentages, SGPA, or CGPA.
+- Use null for missing or unreadable values.
+- Ignore roll numbers, registration numbers, enrollment numbers,
+  serial numbers, institution codes, course codes, branch codes,
+  exam names, session details, addresses, and other unrequested fields.
 """
     + _FOOTER
 )
-
 
 # ============================================================
 # REGISTRY AND COMPACT FORMAT
@@ -234,11 +228,23 @@ _REGISTRY = {
 
 # Column order of each per-subject array in the compact "marks" output.
 MARK_COLUMNS = {
-    "10th_marksheet": ["total", "max_marks"],
-    "12th_marksheet": ["total", "max_marks", "subject_type"],
+    "10th_marksheet": [
+        "total",
+        "max_marks",
+    ],
+    "12th_marksheet": [
+        "total",
+        "max_marks",
+        "subject_type",
+    ],
     "college_marksheet": [
-        "subject_code", "internal", "external",
-        "total", "max_marks", "grade", "grade_points", "credits",
+        "internal",
+        "external",
+        "total",
+        "max_marks",
+        "grade",
+        "grade_points",
+        "credits",
     ],
 }
 
@@ -298,7 +304,7 @@ Do not return markdown. Do not explain your answer."""
         )
         output_block = f"""OUTPUT FORMAT:
 Return ONLY one valid JSON object.
-- Put every scalar field at the TOP LEVEL of the JSON, using the exact field names above. NEVER group fields into sub-objects (no "result": {{...}}); the headings above are labels, not keys.
+- Put every scalar field at the TOP LEVEL of the JSON, using the exact field names above. NEVER group fields into sub-objects (no "address": {{"city": ...}}, no "result": {{...}}); the headings above are labels, not keys.
 - Include ONLY scalar fields that have a printed value. OMIT any field that would be null.
 - Do NOT include "document_type".
 {marks_rule}
@@ -317,7 +323,7 @@ Do not return markdown. Do not explain your answer."""
 
 import typing
 
-_MARK_TEXT_COLUMNS = {"subject_code", "grade", "subject_type"}
+_MARK_TEXT_COLUMNS = {"grade", "subject_type"}
 
 
 def _to_number(value):
